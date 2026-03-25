@@ -7,6 +7,14 @@
 
 A CakePHP plugin that ensures user-chosen slugs are safe and conflict-free for use in URLs.
 
+[日本語ドキュメント / Japanese](README.ja.md)
+
+## Version Map
+
+| CakePHP | PHP    | Plugin | Branch |
+|---------|--------|--------|--------|
+| 5.x     | >= 8.2 | 5.x    | cake5  |
+
 - **SlugValidator** validates that a string is well-formed for use as a subdomain label or URL path segment (lowercase alphanumeric + hyphens, length constraints).
 - **IsNotReservedSlug** compares slugs against a reserved-word list so they never collide with system routes or well-known paths.
 
