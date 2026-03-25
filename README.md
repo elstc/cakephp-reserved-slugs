@@ -20,31 +20,47 @@ A CakePHP plugin that ensures user-chosen slugs are safe and conflict-free for u
 
 ## Installation
 
-You can install this plugin into your CakePHP application using [composer](http://getcomposer.org).
+### Prerequisites
 
-The recommended way to install composer packages is:
+- A CakePHP 5.x application
+- PHP >= 8.2
+- A database connection configured in your app (`config/app_local.php`)
+
+### Steps
+
+1. Install the plugin via Composer:
+
+   ```shell
+   composer require elstc/cakephp-slug-guard
+   ```
+
+2. Load the plugin. This adds `$this->addPlugin('Elastic/SlugGuard')` to your `src/Application.php`:
+
+   ```shell
+   bin/cake plugin load Elastic/SlugGuard
+   ```
+
+3. Run the migration to create the `reserved_slugs` table:
+
+   ```shell
+   bin/cake migrations migrate --plugin Elastic/SlugGuard
+   ```
+
+4. Import the default reserved slugs (~710 common reserved words):
+
+   ```shell
+   bin/cake slug_guard sync
+   ```
+
+### Verify Installation
+
+Run the following command to confirm the reserved slugs were imported:
 
 ```shell
-composer require elstc/cakephp-slug-guard
+bin/cake slug_guard list --count
 ```
 
-Load the plugin by running the console command:
-
-```shell
-bin/cake plugin load Elastic/SlugGuard
-```
-
-Run the migration to create the `reserved_slugs` table:
-
-```shell
-bin/cake migrations migrate --plugin Elastic/SlugGuard
-```
-
-Import the default reserved slugs:
-
-```shell
-bin/cake slug_guard sync
-```
+Expected: a count of approximately 710 reserved slugs.
 
 ## Usage
 

@@ -20,29 +20,47 @@
 
 ## インストール
 
-[Composer](http://getcomposer.org) を使用してインストールできます。
+### 前提条件
+
+- CakePHP 5.x アプリケーション
+- PHP >= 8.2
+- データベース接続が設定済みであること（`config/app_local.php`）
+
+### 手順
+
+1. Composer でプラグインをインストールする:
+
+   ```shell
+   composer require elstc/cakephp-slug-guard
+   ```
+
+2. プラグインをロードする。`src/Application.php` に `$this->addPlugin('Elastic/SlugGuard')` が追加される:
+
+   ```shell
+   bin/cake plugin load Elastic/SlugGuard
+   ```
+
+3. マイグレーションを実行して `reserved_slugs` テーブルを作成する:
+
+   ```shell
+   bin/cake migrations migrate --plugin Elastic/SlugGuard
+   ```
+
+4. デフォルトの予約スラッグ（約710件の一般的な予約語）をインポートする:
+
+   ```shell
+   bin/cake slug_guard sync
+   ```
+
+### インストールの確認
+
+以下のコマンドで予約スラッグがインポートされたことを確認する:
 
 ```shell
-composer require elstc/cakephp-slug-guard
+bin/cake slug_guard list --count
 ```
 
-プラグインをロードします：
-
-```shell
-bin/cake plugin load Elastic/SlugGuard
-```
-
-マイグレーションを実行して `reserved_slugs` テーブルを作成します：
-
-```shell
-bin/cake migrations migrate --plugin Elastic/SlugGuard
-```
-
-デフォルトの予約スラッグをインポートします：
-
-```shell
-bin/cake slug_guard sync
-```
+期待される結果: 約710件の予約スラッグがカウントされる。
 
 ## 使い方
 
