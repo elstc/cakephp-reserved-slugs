@@ -24,7 +24,7 @@ CakePHP 5.x plugin for URL-safe slug validation and reserved-word collision prev
 ## Test Setup
 
 - SQLite in-memory by default (override with `DB_URL` env var)
-- Schema: `tests/schema.php` (CakePHP SchemaLoader)
+- Schema: Plugin migrations (`config/Migrations/`) run in `tests/bootstrap.php`
 
 ## Rules
 
