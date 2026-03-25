@@ -1,8 +1,8 @@
-# ReservedSlugs plugin for CakePHP
+# SlugGuard plugin for CakePHP
 
-[![CI](https://github.com/elstc/cakephp-reserved-slugs/actions/workflows/ci.yml/badge.svg)](https://github.com/elstc/cakephp-reserved-slugs/actions/workflows/ci.yml)
-[![Latest Stable Version](https://img.shields.io/github/v/release/elstc/cakephp-reserved-slugs?sort=semver&style=flat-square)](https://packagist.org/packages/elstc/cakephp-reserved-slugs)
-[![Total Downloads](https://img.shields.io/packagist/dt/elstc/cakephp-reserved-slugs?style=flat-square)](https://packagist.org/packages/elstc/cakephp-reserved-slugs/stats)
+[![CI](https://github.com/elstc/cakephp-slug-guard/actions/workflows/ci.yml/badge.svg)](https://github.com/elstc/cakephp-slug-guard/actions/workflows/ci.yml)
+[![Latest Stable Version](https://img.shields.io/github/v/release/elstc/cakephp-slug-guard?sort=semver&style=flat-square)](https://packagist.org/packages/elstc/cakephp-slug-guard)
+[![Total Downloads](https://img.shields.io/packagist/dt/elstc/cakephp-slug-guard?style=flat-square)](https://packagist.org/packages/elstc/cakephp-slug-guard/stats)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
 
 A CakePHP plugin that ensures user-chosen slugs are safe and conflict-free for use in URLs.
@@ -25,25 +25,25 @@ You can install this plugin into your CakePHP application using [composer](http:
 The recommended way to install composer packages is:
 
 ```shell
-composer require elstc/cakephp-reserved-slugs
+composer require elstc/cakephp-slug-guard
 ```
 
 Load the plugin by running the console command:
 
 ```shell
-bin/cake plugin load ReservedSlugs
+bin/cake plugin load Elastic/SlugGuard
 ```
 
 Run the migration to create the `reserved_slugs` table:
 
 ```shell
-bin/cake migrations migrate --plugin ReservedSlugs
+bin/cake migrations migrate --plugin Elastic/SlugGuard
 ```
 
 Import the default reserved slugs:
 
 ```shell
-bin/cake reserved_slugs sync
+bin/cake slug_guard sync
 ```
 
 ## Usage
@@ -53,7 +53,7 @@ bin/cake reserved_slugs sync
 Add the `IsNotReservedSlug` rule to your table's `buildRules()` method:
 
 ```php
-use ReservedSlugs\Model\Rule\IsNotReservedSlug;
+use Elastic\SlugGuard\Model\Rule\IsNotReservedSlug;
 
 public function buildRules(RulesChecker $rules): RulesChecker
 {
@@ -80,7 +80,7 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 The `SlugValidator` class provides a static method for validating slug format (lowercase alphanumeric and hyphens):
 
 ```php
-use ReservedSlugs\Validation\SlugValidator;
+use Elastic\SlugGuard\Validation\SlugValidator;
 
 // Use as a Validator provider
 $validator->setProvider('slugValidator', SlugValidator::class);
@@ -113,29 +113,29 @@ $validator->add('slug', 'validSlug', [
 #### List reserved slugs
 
 ```shell
-bin/cake reserved_slugs list
-bin/cake reserved_slugs list --count
-bin/cake reserved_slugs list --search admin
+bin/cake slug_guard list
+bin/cake slug_guard list --count
+bin/cake slug_guard list --search admin
 ```
 
 #### Add reserved slugs
 
 ```shell
-bin/cake reserved_slugs add my-reserved-slug
-bin/cake reserved_slugs add slug-one slug-two slug-three
+bin/cake slug_guard add my-reserved-slug
+bin/cake slug_guard add slug-one slug-two slug-three
 ```
 
 #### Remove reserved slugs
 
 ```shell
-bin/cake reserved_slugs remove my-reserved-slug
-bin/cake reserved_slugs remove slug-one slug-two slug-three
+bin/cake slug_guard remove my-reserved-slug
+bin/cake slug_guard remove slug-one slug-two slug-three
 ```
 
 #### Import slugs from a file
 
 ```shell
-bin/cake reserved_slugs import /path/to/slugs.txt
+bin/cake slug_guard import /path/to/slugs.txt
 ```
 
 File format: one slug per line, `#` for comments, empty lines are ignored.
@@ -144,13 +144,13 @@ File format: one slug per line, `#` for comments, empty lines are ignored.
 
 ```shell
 # Sync (auto-detects app config file or falls back to plugin built-in)
-bin/cake reserved_slugs sync
+bin/cake slug_guard sync
 
 # Sync with a specific file
-bin/cake reserved_slugs sync --file /path/to/slugs.txt
+bin/cake slug_guard sync --file /path/to/slugs.txt
 
 # Preview changes without applying
-bin/cake reserved_slugs sync --dry-run
+bin/cake slug_guard sync --dry-run
 ```
 
 When `--file` is not specified, the sync command resolves the seed file in the following order:
@@ -162,7 +162,7 @@ You can override the application config file path via `Configure`:
 
 ```php
 // In config/app.php or config/app_local.php
-'ReservedSlugs' => [
+'SlugGuard' => [
     'syncFile' => CONFIG . 'my-custom-slugs.txt',
 ],
 ```
@@ -194,7 +194,7 @@ youtube
 The built-in list is used as a fallback by the `sync` command when no app-level config file exists. You can also import it directly:
 
 ```shell
-bin/cake reserved_slugs import vendor/elstc/cakephp-reserved-slugs/config/reserved-slugs.txt
+bin/cake slug_guard import vendor/elstc/cakephp-slug-guard/config/reserved-slugs.txt
 ```
 
 #### Using a custom list
@@ -203,10 +203,10 @@ Create your own file following the same format and use it with `import` or `sync
 
 ```shell
 # Import additional slugs from a custom file
-bin/cake reserved_slugs import /path/to/my-slugs.txt
+bin/cake slug_guard import /path/to/my-slugs.txt
 
 # Sync the database to match your custom file exactly
-bin/cake reserved_slugs sync --file /path/to/my-slugs.txt
+bin/cake slug_guard sync --file /path/to/my-slugs.txt
 ```
 
 > **Note:** `import` adds slugs from the file to the database (existing slugs are preserved). `sync` makes the database match the file exactly — slugs not in the file will be removed.

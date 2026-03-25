@@ -4,11 +4,10 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Command;
+namespace Elastic\SlugGuard\Test\TestCase\Command;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class SyncCommandTest extends TestCase
@@ -19,7 +18,7 @@ class SyncCommandTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     public function testSync(): void
@@ -29,13 +28,13 @@ class SyncCommandTest extends TestCase
         file_put_contents($file, "admin\napi\nnew-sync\n");
 
         // Act
-        $this->exec('reserved_slugs sync --file ' . $file);
+        $this->exec('slug_guard sync --file ' . $file);
 
         // Assert
         $this->assertExitSuccess();
         $this->assertOutputContains('Sync complete. Added: 1, Removed: 3');
 
-        $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $this->assertTrue($table->exists(['slug' => 'new-sync']));
         $this->assertFalse($table->exists(['slug' => 'blog']));
 
@@ -49,7 +48,7 @@ class SyncCommandTest extends TestCase
         file_put_contents($file, "admin\napi\nnew-slug\n");
 
         // Act
-        $this->exec('reserved_slugs sync --file ' . $file . ' --dry-run');
+        $this->exec('slug_guard sync --file ' . $file . ' --dry-run');
 
         // Assert
         $this->assertExitSuccess();
@@ -58,7 +57,7 @@ class SyncCommandTest extends TestCase
         $this->assertOutputContains('Slugs to remove (3):');
 
         // Verify no changes were applied
-        $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $this->assertFalse($table->exists(['slug' => 'new-slug']));
         $this->assertTrue($table->exists(['slug' => 'blog']));
 
@@ -72,7 +71,7 @@ class SyncCommandTest extends TestCase
         file_put_contents($file, "admin\napi\nblog\ndashboard\nhelp\n");
 
         // Act
-        $this->exec('reserved_slugs sync --file ' . $file . ' --dry-run');
+        $this->exec('slug_guard sync --file ' . $file . ' --dry-run');
 
         // Assert
         $this->assertExitSuccess();
@@ -89,13 +88,13 @@ class SyncCommandTest extends TestCase
 
         try {
             // Act
-            $this->exec('reserved_slugs sync');
+            $this->exec('slug_guard sync');
 
             // Assert
             $this->assertExitSuccess();
             $this->assertOutputContains('Sync complete.');
 
-            $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+            $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
             $this->assertTrue($table->exists(['slug' => 'custom-app-slug']));
             $this->assertFalse($table->exists(['slug' => 'blog']));
         } finally {
@@ -111,7 +110,7 @@ class SyncCommandTest extends TestCase
 
         try {
             // Act
-            $this->exec('reserved_slugs sync --dry-run');
+            $this->exec('slug_guard sync --dry-run');
 
             // Assert
             $this->assertExitSuccess();
@@ -127,27 +126,27 @@ class SyncCommandTest extends TestCase
         // Arrange
         $customFile = TMP . 'configured-slugs.txt';
         file_put_contents($customFile, "admin\nconfigured-slug\n");
-        Configure::write('ReservedSlugs.syncFile', $customFile);
+        Configure::write('SlugGuard.syncFile', $customFile);
 
         try {
             // Act
-            $this->exec('reserved_slugs sync');
+            $this->exec('slug_guard sync');
 
             // Assert
             $this->assertExitSuccess();
             $this->assertOutputContains('Sync complete.');
 
-            $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+            $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
             $this->assertTrue($table->exists(['slug' => 'configured-slug']));
         } finally {
-            Configure::delete('ReservedSlugs.syncFile');
+            Configure::delete('SlugGuard.syncFile');
             unlink($customFile);
         }
     }
 
     public function testSyncWithNonExistentFile(): void
     {
-        $this->exec('reserved_slugs sync --file /nonexistent/file.txt');
+        $this->exec('slug_guard sync --file /nonexistent/file.txt');
 
         $this->assertExitError();
         $this->assertErrorContains('File not found');

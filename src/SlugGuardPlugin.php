@@ -4,11 +4,11 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs;
+namespace Elastic\SlugGuard;
 
 use Cake\Core\BasePlugin;
 
-class ReservedSlugsPlugin extends BasePlugin
+class SlugGuardPlugin extends BasePlugin
 {
     // This plugin only provides CLI commands and ORM components.
     // No bootstrap, middleware, or route hooks are needed.

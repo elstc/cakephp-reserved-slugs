@@ -4,12 +4,12 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Lib;
+namespace Elastic\SlugGuard\Test\TestCase\Lib;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use Elastic\SlugGuard\Lib\SlugsFileLoader;
 use InvalidArgumentException;
-use ReservedSlugs\Lib\SlugsFileLoader;
 
 class SlugsFileLoaderTest extends TestCase
 {
@@ -23,7 +23,7 @@ class SlugsFileLoaderTest extends TestCase
 
     public function tearDown(): void
     {
-        Configure::delete('ReservedSlugs.syncFile');
+        Configure::delete('SlugGuard.syncFile');
         unset($this->loader);
         parent::tearDown();
     }
@@ -83,7 +83,7 @@ class SlugsFileLoaderTest extends TestCase
         // Arrange
         $customFile = TMP . 'custom-reserved-slugs.txt';
         file_put_contents($customFile, "test-slug\n");
-        Configure::write('ReservedSlugs.syncFile', $customFile);
+        Configure::write('SlugGuard.syncFile', $customFile);
 
         try {
             // Act
@@ -99,7 +99,7 @@ class SlugsFileLoaderTest extends TestCase
     public function testResolveSeedFileWithNonExistentConfiguredFile(): void
     {
         // Arrange
-        Configure::write('ReservedSlugs.syncFile', '/nonexistent/custom-slugs.txt');
+        Configure::write('SlugGuard.syncFile', '/nonexistent/custom-slugs.txt');
 
         // Act
         $result = $this->loader->resolveSeedFile();

@@ -4,12 +4,12 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Lib;
+namespace Elastic\SlugGuard\Test\TestCase\Lib;
 
 use Cake\TestSuite\TestCase;
+use Elastic\SlugGuard\Lib\SlugsSyncService;
+use Elastic\SlugGuard\Model\Table\ReservedSlugsTable;
 use InvalidArgumentException;
-use ReservedSlugs\Lib\SlugsSyncService;
-use ReservedSlugs\Model\Table\ReservedSlugsTable;
 
 class SlugsSyncServiceTest extends TestCase
 {
@@ -17,7 +17,7 @@ class SlugsSyncServiceTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     protected SlugsSyncService $service;
@@ -27,8 +27,8 @@ class SlugsSyncServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        /** @var \ReservedSlugs\Model\Table\ReservedSlugsTable $table */
-        $table = $this->fetchTable('ReservedSlugs.ReservedSlugs');
+        /** @var \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table */
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $this->table = $table;
         $this->service = new SlugsSyncService($this->table);
     }

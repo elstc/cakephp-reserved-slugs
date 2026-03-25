@@ -4,10 +4,9 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Command;
+namespace Elastic\SlugGuard\Test\TestCase\Command;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class RemoveCommandTest extends TestCase
@@ -18,18 +17,18 @@ class RemoveCommandTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     public function testRemoveExistingSlug(): void
     {
-        $this->exec('reserved_slugs remove admin');
+        $this->exec('slug_guard remove admin');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('Removed: admin');
         $this->assertOutputContains('Removed 1 slug(s).');
 
-        $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $this->assertFalse($table->exists(['slug' => 'admin']));
     }
 
@@ -37,13 +36,13 @@ class RemoveCommandTest extends TestCase
     {
         // Arrange
         // -----------------------------------------------
-        $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $table->addSlug('to-remove-one');
         $table->addSlug('to-remove-two');
 
         // Act
         // -----------------------------------------------
-        $this->exec('reserved_slugs remove to-remove-one to-remove-two');
+        $this->exec('slug_guard remove to-remove-one to-remove-two');
 
         // Assert
         // -----------------------------------------------
@@ -58,7 +57,7 @@ class RemoveCommandTest extends TestCase
 
     public function testRemoveNonExistingSlug(): void
     {
-        $this->exec('reserved_slugs remove non-existing');
+        $this->exec('slug_guard remove non-existing');
 
         $this->assertExitSuccess();
         $this->assertErrorContains('Not found: non-existing');

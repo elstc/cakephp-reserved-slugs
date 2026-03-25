@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Model\Rule;
+namespace Elastic\SlugGuard\Model\Rule;
 
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -50,7 +50,7 @@ class IsNotReservedSlug
      */
     public function __construct(
         string $slugField = 'slug',
-        string $tableName = 'ReservedSlugs.ReservedSlugs',
+        string $tableName = 'Elastic/SlugGuard.ReservedSlugs',
     ) {
         $this->slugField = $slugField;
         $this->tableName = $tableName;
@@ -72,7 +72,7 @@ class IsNotReservedSlug
             return true;
         }
 
-        /** @var \ReservedSlugs\Model\Table\ReservedSlugsTable $table */
+        /** @var \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table */
         $table = $this->fetchTable($this->tableName);
 
         return !$table->slugExists((string)$slug);

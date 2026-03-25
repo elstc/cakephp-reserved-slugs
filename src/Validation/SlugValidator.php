@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Validation;
+namespace Elastic\SlugGuard\Validation;
 
 /**
  * Slug format validator for URL-safe strings.

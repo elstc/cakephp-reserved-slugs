@@ -4,9 +4,9 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Lib;
+namespace Elastic\SlugGuard\Lib;
 
-use ReservedSlugs\Model\Table\ReservedSlugsTable;
+use Elastic\SlugGuard\Model\Table\ReservedSlugsTable;
 
 /**
  * Handles file-based import and sync operations for reserved slugs.
@@ -16,8 +16,8 @@ class SlugsSyncService
     private SlugsFileLoader $loader;
 
     /**
-     * @param \ReservedSlugs\Model\Table\ReservedSlugsTable $table The reserved slugs table.
-     * @param \ReservedSlugs\Lib\SlugsFileLoader|null $loader File loader instance. Defaults to a new SlugsFileLoader.
+     * @param \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table The reserved slugs table.
+     * @param \Elastic\SlugGuard\Lib\SlugsFileLoader|null $loader File loader instance. Defaults to a new SlugsFileLoader.
      */
     public function __construct(
         private ReservedSlugsTable $table,

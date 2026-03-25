@@ -4,11 +4,11 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Model\Table;
+namespace Elastic\SlugGuard\Test\TestCase\Model\Table;
 
 use Cake\TestSuite\TestCase;
+use Elastic\SlugGuard\Model\Table\ReservedSlugsTable;
 use PHPUnit\Framework\Attributes\DataProvider;
-use ReservedSlugs\Model\Table\ReservedSlugsTable;
 
 class ReservedSlugsTableTest extends TestCase
 {
@@ -16,7 +16,7 @@ class ReservedSlugsTableTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     protected ReservedSlugsTable $ReservedSlugs;
@@ -25,7 +25,7 @@ class ReservedSlugsTableTest extends TestCase
     {
         parent::setUp();
         /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-        $this->ReservedSlugs = $this->fetchTable('ReservedSlugs.ReservedSlugs');
+        $this->ReservedSlugs = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
     }
 
     public function tearDown(): void

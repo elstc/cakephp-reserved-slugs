@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Model\Entity;
+namespace Elastic\SlugGuard\Model\Entity;
 
 use Cake\ORM\Entity;
 

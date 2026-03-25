@@ -4,14 +4,14 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Command;
+namespace Elastic\SlugGuard\Command;
 
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Elastic\SlugGuard\Lib\SlugsSyncService;
 use InvalidArgumentException;
-use ReservedSlugs\Lib\SlugsSyncService;
 
 /**
  * Import reserved slugs from a text file.
@@ -23,7 +23,7 @@ class ImportCommand extends Command
      */
     public static function defaultName(): string
     {
-        return 'reserved_slugs import';
+        return 'slug_guard import';
     }
 
     /**
@@ -46,8 +46,8 @@ class ImportCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): int
     {
-        /** @var \ReservedSlugs\Model\Table\ReservedSlugsTable $table */
-        $table = $this->fetchTable('ReservedSlugs.ReservedSlugs');
+        /** @var \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table */
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $service = new SlugsSyncService($table);
 
         /** @var string $file */

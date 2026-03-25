@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Lib;
+namespace Elastic\SlugGuard\Lib;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
@@ -49,21 +49,21 @@ class SlugsFileLoader
      */
     public function getDefaultSeedFile(): string
     {
-        return Plugin::configPath('ReservedSlugs') . 'reserved-slugs.txt';
+        return Plugin::configPath('Elastic/SlugGuard') . 'reserved-slugs.txt';
     }
 
     /**
      * Resolve the seed file path using a priority-based lookup.
      *
      * Priority:
-     * 1. Application config (Configure key: `ReservedSlugs.syncFile`, default: CONFIG/reserved-slugs.txt)
+     * 1. Application config (Configure key: `SlugGuard.syncFile`, default: CONFIG/reserved-slugs.txt)
      * 2. Plugin built-in seed file
      *
      * @return string First existing file path.
      */
     public function resolveSeedFile(): string
     {
-        $appFile = Configure::read('ReservedSlugs.syncFile', CONFIG . 'reserved-slugs.txt');
+        $appFile = Configure::read('SlugGuard.syncFile', CONFIG . 'reserved-slugs.txt');
         if (is_file($appFile)) {
             return $appFile;
         }

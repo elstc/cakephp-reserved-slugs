@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Command;
+namespace Elastic\SlugGuard\Command;
 
 use Cake\Command\Command;
 use Cake\Console\Arguments;
@@ -21,7 +21,7 @@ class AddCommand extends Command
      */
     public static function defaultName(): string
     {
-        return 'reserved_slugs add';
+        return 'slug_guard add';
     }
 
     /**
@@ -39,8 +39,8 @@ class AddCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): int
     {
-        /** @var \ReservedSlugs\Model\Table\ReservedSlugsTable $table */
-        $table = $this->fetchTable('ReservedSlugs.ReservedSlugs');
+        /** @var \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table */
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
 
         /** @var list<string> $slugs */
         $slugs = $args->getArguments();

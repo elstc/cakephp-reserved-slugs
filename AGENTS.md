@@ -18,7 +18,7 @@ CakePHP 5.x plugin for URL-safe slug validation and reserved-word collision prev
 
 - **`ReservedSlugsTable`** — Primary key is `slug` column (string PK, not auto-increment)
 - **`SlugsSyncService`** — import/sync run inside a DB transaction; uses `SlugsFileLoader` for seed file resolution
-- **Seed file priority**: (1) `Configure('ReservedSlugs.syncFile')` → (2) `CONFIG/reserved-slugs.txt` → (3) plugin built-in `config/reserved-slugs.txt`
+- **Seed file priority**: (1) `Configure('SlugGuard.syncFile')` → (2) `CONFIG/reserved-slugs.txt` → (3) plugin built-in `config/reserved-slugs.txt`
 - **Plugin class** enables console only (bootstrap/middleware/routes disabled)
 
 ## Test Setup

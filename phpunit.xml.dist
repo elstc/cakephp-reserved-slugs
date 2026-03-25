@@ -12,7 +12,7 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
 
     <testsuites>
-        <testsuite name="reserved-slugs">
+        <testsuite name="slug-guard">
             <directory>tests/TestCase/</directory>
         </testsuite>
     </testsuites>

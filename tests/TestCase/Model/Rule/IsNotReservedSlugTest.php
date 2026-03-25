@@ -4,12 +4,12 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Model\Rule;
+namespace Elastic\SlugGuard\Test\TestCase\Model\Rule;
 
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use Elastic\SlugGuard\Model\Rule\IsNotReservedSlug;
 use PHPUnit\Framework\Attributes\DataProvider;
-use ReservedSlugs\Model\Rule\IsNotReservedSlug;
 
 class IsNotReservedSlugTest extends TestCase
 {
@@ -17,7 +17,7 @@ class IsNotReservedSlugTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     /**

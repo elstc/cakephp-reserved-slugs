@@ -10,8 +10,8 @@ use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
+use Elastic\SlugGuard\SlugGuardPlugin;
 use Migrations\Migrations;
-use ReservedSlugs\ReservedSlugsPlugin;
 
 $findRoot = function ($root) {
     do {
@@ -60,12 +60,12 @@ ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
 Router::reload();
 Security::setSalt('YJfIxfs2guVoUubWDYhG93b0qyJfIxfs2guwvniR2G0FgaC9mi');
 
-Plugin::getCollection()->add(new ReservedSlugsPlugin());
+Plugin::getCollection()->add(new SlugGuardPlugin());
 
 $_SERVER['PHP_SELF'] = '/';
 
 // Run plugin migrations to create test schema
 (new Migrations())->migrate([
     'connection' => 'test',
-    'plugin' => 'ReservedSlugs',
+    'plugin' => 'Elastic/SlugGuard',
 ]);

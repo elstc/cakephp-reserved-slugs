@@ -4,10 +4,9 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Command;
+namespace Elastic\SlugGuard\Test\TestCase\Command;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 class ImportCommandTest extends TestCase
@@ -18,7 +17,7 @@ class ImportCommandTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     public function testImportFromFile(): void
@@ -28,13 +27,13 @@ class ImportCommandTest extends TestCase
         file_put_contents($file, "admin\nnew-import\nanother-import\n");
 
         // Act
-        $this->exec('reserved_slugs import ' . $file);
+        $this->exec('slug_guard import ' . $file);
 
         // Assert
         $this->assertExitSuccess();
         $this->assertOutputContains('Imported 2 new slug(s).');
 
-        $table = TableRegistry::getTableLocator()->get('ReservedSlugs.ReservedSlugs');
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $this->assertTrue($table->exists(['slug' => 'new-import']));
         $this->assertTrue($table->exists(['slug' => 'another-import']));
 
@@ -43,7 +42,7 @@ class ImportCommandTest extends TestCase
 
     public function testImportFromNonExistentFile(): void
     {
-        $this->exec('reserved_slugs import /nonexistent/file.txt');
+        $this->exec('slug_guard import /nonexistent/file.txt');
 
         $this->assertExitError();
         $this->assertErrorContains('File not found');

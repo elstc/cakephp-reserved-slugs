@@ -9,7 +9,7 @@ namespace TestApp;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
-use ReservedSlugs\ReservedSlugsPlugin;
+use Elastic\SlugGuard\SlugGuardPlugin;
 
 class Application extends BaseApplication
 {
@@ -24,6 +24,6 @@ class Application extends BaseApplication
 
     public function bootstrap(): void
     {
-        $this->addPlugin(ReservedSlugsPlugin::class);
+        $this->addPlugin(SlugGuardPlugin::class);
     }
 }

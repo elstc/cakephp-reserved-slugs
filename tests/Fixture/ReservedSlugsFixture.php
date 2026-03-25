@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\Fixture;
+namespace Elastic\SlugGuard\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 

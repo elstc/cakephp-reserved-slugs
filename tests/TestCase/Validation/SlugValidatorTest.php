@@ -4,11 +4,11 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Validation;
+namespace Elastic\SlugGuard\Test\TestCase\Validation;
 
+use Elastic\SlugGuard\Validation\SlugValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use ReservedSlugs\Validation\SlugValidator;
 
 class SlugValidatorTest extends TestCase
 {

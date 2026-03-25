@@ -4,22 +4,22 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Model\Table;
+namespace Elastic\SlugGuard\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use ReservedSlugs\Model\Entity\ReservedSlug;
+use Elastic\SlugGuard\Model\Entity\ReservedSlug;
 
 /**
  * ReservedSlugs Model
  *
- * @method \ReservedSlugs\Model\Entity\ReservedSlug newEmptyEntity()
- * @method \ReservedSlugs\Model\Entity\ReservedSlug newEntity(array $data, array $options = [])
- * @method \ReservedSlugs\Model\Entity\ReservedSlug get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \ReservedSlugs\Model\Entity\ReservedSlug findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method \ReservedSlugs\Model\Entity\ReservedSlug patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \ReservedSlugs\Model\Entity\ReservedSlug|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method \ReservedSlugs\Model\Entity\ReservedSlug saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug newEmptyEntity()
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug newEntity(array $data, array $options = [])
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
  */
 class ReservedSlugsTable extends Table
 {
@@ -77,7 +77,7 @@ class ReservedSlugsTable extends Table
      * Add a reserved slug.
      *
      * @param string $slug The slug to add.
-     * @return \ReservedSlugs\Model\Entity\ReservedSlug|false
+     * @return \Elastic\SlugGuard\Model\Entity\ReservedSlug|false
      */
     public function addSlug(string $slug): ReservedSlug|false
     {

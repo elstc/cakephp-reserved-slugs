@@ -4,14 +4,14 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Command;
+namespace Elastic\SlugGuard\Command;
 
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Elastic\SlugGuard\Lib\SlugsSyncService;
 use InvalidArgumentException;
-use ReservedSlugs\Lib\SlugsSyncService;
 
 /**
  * Sync reserved slugs with a text file.
@@ -23,7 +23,7 @@ class SyncCommand extends Command
      */
     public static function defaultName(): string
     {
-        return 'reserved_slugs sync';
+        return 'slug_guard sync';
     }
 
     /**
@@ -52,8 +52,8 @@ class SyncCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): int
     {
-        /** @var \ReservedSlugs\Model\Table\ReservedSlugsTable $table */
-        $table = $this->fetchTable('ReservedSlugs.ReservedSlugs');
+        /** @var \Elastic\SlugGuard\Model\Table\ReservedSlugsTable $table */
+        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
         $service = new SlugsSyncService($table);
 
         $file = $args->getOption('file');
@@ -79,7 +79,7 @@ class SyncCommand extends Command
     /**
      * Preview sync changes without applying them.
      *
-     * @param \ReservedSlugs\Lib\SlugsSyncService $service The sync service.
+     * @param \Elastic\SlugGuard\Lib\SlugsSyncService $service The sync service.
      * @param string|null $filePath The file path.
      * @param \Cake\Console\ConsoleIo $io The console IO.
      * @return int

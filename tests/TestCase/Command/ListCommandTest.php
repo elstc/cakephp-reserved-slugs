@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace ReservedSlugs\Test\TestCase\Command;
+namespace Elastic\SlugGuard\Test\TestCase\Command;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
@@ -17,12 +17,12 @@ class ListCommandTest extends TestCase
      * @var list<string>
      */
     protected array $fixtures = [
-        'plugin.ReservedSlugs.ReservedSlugs',
+        'plugin.Elastic/SlugGuard.ReservedSlugs',
     ];
 
     public function testListAllSlugs(): void
     {
-        $this->exec('reserved_slugs list');
+        $this->exec('slug_guard list');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('admin');
@@ -32,7 +32,7 @@ class ListCommandTest extends TestCase
 
     public function testListWithCount(): void
     {
-        $this->exec('reserved_slugs list --count');
+        $this->exec('slug_guard list --count');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('5');
@@ -40,7 +40,7 @@ class ListCommandTest extends TestCase
 
     public function testListWithSearch(): void
     {
-        $this->exec('reserved_slugs list --search bl');
+        $this->exec('slug_guard list --search bl');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('blog');
@@ -49,7 +49,7 @@ class ListCommandTest extends TestCase
 
     public function testListWithSearchNoResults(): void
     {
-        $this->exec('reserved_slugs list --search zzzzz');
+        $this->exec('slug_guard list --search zzzzz');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('No reserved slugs found.');

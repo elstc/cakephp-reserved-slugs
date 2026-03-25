@@ -1,5 +1,5 @@
 {
-    "name": "elstc/cakephp-reserved-slugs",
+    "name": "elstc/cakephp-slug-guard",
     "description": "CakePHP plugin for URL-safe slug validation and reserved-word collision prevention",
     "license": "MIT",
     "type": "cakephp-plugin",
@@ -11,13 +11,13 @@
     "authors": [
         {
             "name": "nojimage",
-            "homepage": "https://github.com/elstc/cakephp-reserved-slugs/graphs/contributors"
+            "homepage": "https://github.com/elstc/cakephp-slug-guard/graphs/contributors"
         }
     ],
-    "homepage": "https://github.com/elstc/cakephp-reserved-slugs",
+    "homepage": "https://github.com/elstc/cakephp-slug-guard",
     "support": {
-        "issues": "https://github.com/elstc/cakephp-reserved-slugs/issues",
-        "source": "https://github.com/elstc/cakephp-reserved-slugs"
+        "issues": "https://github.com/elstc/cakephp-slug-guard/issues",
+        "source": "https://github.com/elstc/cakephp-slug-guard"
     },
     "require": {
         "php": ">=8.2",
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ReservedSlugs\\": "src/"
+            "Elastic\\SlugGuard\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ReservedSlugs\\Test\\": "tests/",
+            "Elastic\\SlugGuard\\Test\\": "tests/",
             "TestApp\\": "tests/test_app/TestApp/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }

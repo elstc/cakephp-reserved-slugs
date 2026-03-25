@@ -1,8 +1,8 @@
-# ReservedSlugs plugin for CakePHP
+# SlugGuard plugin for CakePHP
 
-[![CI](https://github.com/elstc/cakephp-reserved-slugs/actions/workflows/ci.yml/badge.svg)](https://github.com/elstc/cakephp-reserved-slugs/actions/workflows/ci.yml)
-[![Latest Stable Version](https://img.shields.io/github/v/release/elstc/cakephp-reserved-slugs?sort=semver&style=flat-square)](https://packagist.org/packages/elstc/cakephp-reserved-slugs)
-[![Total Downloads](https://img.shields.io/packagist/dt/elstc/cakephp-reserved-slugs?style=flat-square)](https://packagist.org/packages/elstc/cakephp-reserved-slugs/stats)
+[![CI](https://github.com/elstc/cakephp-slug-guard/actions/workflows/ci.yml/badge.svg)](https://github.com/elstc/cakephp-slug-guard/actions/workflows/ci.yml)
+[![Latest Stable Version](https://img.shields.io/github/v/release/elstc/cakephp-slug-guard?sort=semver&style=flat-square)](https://packagist.org/packages/elstc/cakephp-slug-guard)
+[![Total Downloads](https://img.shields.io/packagist/dt/elstc/cakephp-slug-guard?style=flat-square)](https://packagist.org/packages/elstc/cakephp-slug-guard/stats)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
 
 ユーザーが選択したスラッグが URL で安全に使用でき、システムルートや予約語と衝突しないことを保証する CakePHP プラグインです。
@@ -23,25 +23,25 @@
 [Composer](http://getcomposer.org) を使用してインストールできます。
 
 ```shell
-composer require elstc/cakephp-reserved-slugs
+composer require elstc/cakephp-slug-guard
 ```
 
 プラグインをロードします：
 
 ```shell
-bin/cake plugin load ReservedSlugs
+bin/cake plugin load Elastic/SlugGuard
 ```
 
 マイグレーションを実行して `reserved_slugs` テーブルを作成します：
 
 ```shell
-bin/cake migrations migrate --plugin ReservedSlugs
+bin/cake migrations migrate --plugin Elastic/SlugGuard
 ```
 
 デフォルトの予約スラッグをインポートします：
 
 ```shell
-bin/cake reserved_slugs sync
+bin/cake slug_guard sync
 ```
 
 ## 使い方
@@ -51,7 +51,7 @@ bin/cake reserved_slugs sync
 テーブルの `buildRules()` メソッドに `IsNotReservedSlug` ルールを追加します：
 
 ```php
-use ReservedSlugs\Model\Rule\IsNotReservedSlug;
+use Elastic\SlugGuard\Model\Rule\IsNotReservedSlug;
 
 public function buildRules(RulesChecker $rules): RulesChecker
 {
@@ -78,7 +78,7 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 `SlugValidator` クラスはスラッグ形式（小文字英数字とハイフン）を検証する静的メソッドを提供します：
 
 ```php
-use ReservedSlugs\Validation\SlugValidator;
+use Elastic\SlugGuard\Validation\SlugValidator;
 
 // Validator プロバイダとして使用
 $validator->setProvider('slugValidator', SlugValidator::class);
@@ -111,29 +111,29 @@ $validator->add('slug', 'validSlug', [
 #### 予約スラッグの一覧表示
 
 ```shell
-bin/cake reserved_slugs list
-bin/cake reserved_slugs list --count
-bin/cake reserved_slugs list --search admin
+bin/cake slug_guard list
+bin/cake slug_guard list --count
+bin/cake slug_guard list --search admin
 ```
 
 #### 予約スラッグの追加
 
 ```shell
-bin/cake reserved_slugs add my-reserved-slug
-bin/cake reserved_slugs add slug-one slug-two slug-three
+bin/cake slug_guard add my-reserved-slug
+bin/cake slug_guard add slug-one slug-two slug-three
 ```
 
 #### 予約スラッグの削除
 
 ```shell
-bin/cake reserved_slugs remove my-reserved-slug
-bin/cake reserved_slugs remove slug-one slug-two slug-three
+bin/cake slug_guard remove my-reserved-slug
+bin/cake slug_guard remove slug-one slug-two slug-three
 ```
 
 #### ファイルからスラッグをインポート
 
 ```shell
-bin/cake reserved_slugs import /path/to/slugs.txt
+bin/cake slug_guard import /path/to/slugs.txt
 ```
 
 ファイル形式: 1行に1スラッグ、`#` でコメント、空行は無視されます。
@@ -142,13 +142,13 @@ bin/cake reserved_slugs import /path/to/slugs.txt
 
 ```shell
 # 同期（アプリの設定ファイルを自動検出、なければプラグイン内蔵ファイルを使用）
-bin/cake reserved_slugs sync
+bin/cake slug_guard sync
 
 # 特定のファイルと同期
-bin/cake reserved_slugs sync --file /path/to/slugs.txt
+bin/cake slug_guard sync --file /path/to/slugs.txt
 
 # 変更内容をプレビュー（実際には適用しない）
-bin/cake reserved_slugs sync --dry-run
+bin/cake slug_guard sync --dry-run
 ```
 
 `--file` を指定しない場合、sync コマンドは以下の優先順位でシードファイルを解決します：
@@ -160,7 +160,7 @@ bin/cake reserved_slugs sync --dry-run
 
 ```php
 // config/app.php または config/app_local.php
-'ReservedSlugs' => [
+'SlugGuard' => [
     'syncFile' => CONFIG . 'my-custom-slugs.txt',
 ],
 ```
@@ -192,7 +192,7 @@ youtube
 内蔵リストは、アプリレベルの設定ファイルが存在しない場合に `sync` コマンドのフォールバックとして使用されます。直接インポートすることもできます：
 
 ```shell
-bin/cake reserved_slugs import vendor/elstc/cakephp-reserved-slugs/config/reserved-slugs.txt
+bin/cake slug_guard import vendor/elstc/cakephp-slug-guard/config/reserved-slugs.txt
 ```
 
 #### カスタムリストの使用
@@ -201,10 +201,10 @@ bin/cake reserved_slugs import vendor/elstc/cakephp-reserved-slugs/config/reserv
 
 ```shell
 # カスタムファイルからスラッグを追加インポート
-bin/cake reserved_slugs import /path/to/my-slugs.txt
+bin/cake slug_guard import /path/to/my-slugs.txt
 
 # データベースをカスタムファイルと完全に一致させる
-bin/cake reserved_slugs sync --file /path/to/my-slugs.txt
+bin/cake slug_guard sync --file /path/to/my-slugs.txt
 ```
 
 > **注意:** `import` はファイルのスラッグをデータベースに追加します（既存のスラッグは保持されます）。`sync` はデータベースをファイルと完全に一致させます — ファイルに含まれないスラッグは削除されます。
