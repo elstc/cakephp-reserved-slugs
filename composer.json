@@ -1,7 +1,6 @@
 {
     "name": "elstc/cakephp-reserved-slugs",
     "description": "CakePHP plugin for URL-safe slug validation and reserved-word collision prevention",
-    "version": "5.0.0-rc1",
     "license": "MIT",
     "type": "cakephp-plugin",
     "keywords": [
