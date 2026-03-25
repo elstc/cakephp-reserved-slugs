@@ -4,9 +4,14 @@
  */
 declare(strict_types=1);
 
-use Phinx\Migration\AbstractMigration;
+// cakephp/migrations 4.x uses Phinx, 5.x uses Migrations\BaseMigration
+if (class_exists('Migrations\BaseMigration')) {
+    class_alias('Migrations\BaseMigration', 'CreateReservedSlugsBase');
+} else {
+    class_alias('Phinx\Migration\AbstractMigration', 'CreateReservedSlugsBase');
+}
 
-class CreateReservedSlugs extends AbstractMigration
+class CreateReservedSlugs extends CreateReservedSlugsBase
 {
     /**
      * Change Method.

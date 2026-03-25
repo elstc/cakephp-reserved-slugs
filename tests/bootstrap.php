@@ -9,8 +9,8 @@ use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Routing\Router;
-use Cake\TestSuite\Fixture\SchemaLoader;
 use Cake\Utility\Security;
+use Migrations\Migrations;
 use ReservedSlugs\ReservedSlugsPlugin;
 
 $findRoot = function ($root) {
@@ -64,5 +64,8 @@ Plugin::getCollection()->add(new ReservedSlugsPlugin());
 
 $_SERVER['PHP_SELF'] = '/';
 
-// Create test schema
-(new SchemaLoader())->loadInternalFile($root . '/tests/schema.php');
+// Run plugin migrations to create test schema
+(new Migrations())->migrate([
+    'connection' => 'test',
+    'plugin' => 'ReservedSlugs',
+]);
