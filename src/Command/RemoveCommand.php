@@ -29,13 +29,7 @@ class RemoveCommand extends Command
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser
-            ->setDescription('Remove one or more reserved slugs.')
-            ->addArgument('slugs', [
-                'help' => 'The slug(s) to remove. Use commas to separate multiple slugs.',
-                'required' => true,
-                'separator' => ',',
-            ]);
+        $parser->setDescription('Remove one or more reserved slugs.');
 
         return $parser;
     }
@@ -49,7 +43,12 @@ class RemoveCommand extends Command
         $table = $this->fetchTable('ReservedSlugs.ReservedSlugs');
 
         /** @var list<string> $slugs */
-        $slugs = $args->getArrayArgument('slugs') ?? [];
+        $slugs = $args->getArguments();
+        if (count($slugs) === 0) {
+            $io->error('At least one slug is required.');
+
+            return static::CODE_ERROR;
+        }
         $removed = 0;
 
         foreach ($slugs as $slug) {

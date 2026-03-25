@@ -43,7 +43,7 @@ class RemoveCommandTest extends TestCase
 
         // Act
         // -----------------------------------------------
-        $this->exec('reserved_slugs remove to-remove-one,to-remove-two');
+        $this->exec('reserved_slugs remove to-remove-one to-remove-two');
 
         // Assert
         // -----------------------------------------------

@@ -118,16 +118,18 @@ bin/cake reserved_slugs list --count
 bin/cake reserved_slugs list --search admin
 ```
 
-#### Add a reserved slug
+#### Add reserved slugs
 
 ```shell
 bin/cake reserved_slugs add my-reserved-slug
+bin/cake reserved_slugs add slug-one slug-two slug-three
 ```
 
-#### Remove a reserved slug
+#### Remove reserved slugs
 
 ```shell
 bin/cake reserved_slugs remove my-reserved-slug
+bin/cake reserved_slugs remove slug-one slug-two slug-three
 ```
 
 #### Import slugs from a file

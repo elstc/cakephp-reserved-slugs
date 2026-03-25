@@ -37,7 +37,7 @@ class AddCommandTest extends TestCase
     {
         // Act
         // -----------------------------------------------
-        $this->exec('reserved_slugs add new-slug-one,new-slug-two');
+        $this->exec('reserved_slugs add new-slug-one new-slug-two');
 
         // Assert
         // -----------------------------------------------

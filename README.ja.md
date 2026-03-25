@@ -120,12 +120,14 @@ bin/cake reserved_slugs list --search admin
 
 ```shell
 bin/cake reserved_slugs add my-reserved-slug
+bin/cake reserved_slugs add slug-one slug-two slug-three
 ```
 
 #### 予約スラッグの削除
 
 ```shell
 bin/cake reserved_slugs remove my-reserved-slug
+bin/cake reserved_slugs remove slug-one slug-two slug-three
 ```
 
 #### ファイルからスラッグをインポート
