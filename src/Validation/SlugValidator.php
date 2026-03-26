@@ -52,6 +52,7 @@ class SlugValidator
      * @param int $minLength Minimum slug length.
      * @param int $maxLength Maximum slug length.
      * @return bool True if the value is a valid slug.
+     * @throws \InvalidArgumentException If $minLength < 2 or $maxLength < $minLength.
      */
     public static function isValid(
         mixed $value,
@@ -68,7 +69,9 @@ class SlugValidator
             throw new InvalidArgumentException(__d('elastic/slug_guard', 'minLength must be at least 2.'));
         }
         if ($maxLength < $minLength) {
-            return false;
+            throw new InvalidArgumentException(
+                __d('elastic/slug_guard', 'maxLength must be greater than or equal to minLength.'),
+            );
         }
 
         // The regex is split into three parts: start char + middle chars + end char.
