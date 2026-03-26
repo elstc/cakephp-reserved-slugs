@@ -37,7 +37,7 @@ class SlugsSyncService
      */
     public function importFromFile(string $filePath): int
     {
-        $this->loader->resolveAndValidate($filePath);
+        $filePath = $this->loader->resolveAndValidate($filePath);
 
         $slugs = $this->loader->parse($filePath);
         if (empty($slugs)) {
@@ -60,9 +60,9 @@ class SlugsSyncService
         $entities = $this->table->newEntities(
             array_map(fn(string $slug) => ['slug' => $slug], array_values($toAdd)),
         );
-        $saved = $this->table->saveMany($entities);
+        $this->table->saveManyOrFail($entities);
 
-        return $saved !== false ? count(iterator_to_array($saved)) : 0;
+        return count($entities);
     }
 
     /**
@@ -102,19 +102,21 @@ class SlugsSyncService
      */
     public function syncFromFile(?string $filePath = null): array
     {
-        $diff = $this->calculateDiff($filePath);
-
         $added = 0;
         $removed = 0;
 
+        // Diff calculation and mutations run in a single transaction
+        // to prevent TOCTOU inconsistencies between reads and writes.
         $this->table->getConnection()->transactional(
-            function () use ($diff, &$added, &$removed): void {
+            function () use ($filePath, &$added, &$removed): void {
+                $diff = $this->calculateDiff($filePath);
+
                 if (!empty($diff['toAdd'])) {
                     $entities = $this->table->newEntities(
                         array_map(fn(string $slug) => ['slug' => $slug], $diff['toAdd']),
                     );
-                    $saved = $this->table->saveMany($entities);
-                    $added = $saved !== false ? count(iterator_to_array($saved)) : 0;
+                    $this->table->saveManyOrFail($entities);
+                    $added = count($entities);
                 }
 
                 if (!empty($diff['toRemove'])) {
