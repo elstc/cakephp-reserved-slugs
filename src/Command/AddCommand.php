@@ -13,9 +13,18 @@ use Cake\Console\ConsoleOptionParser;
 
 /**
  * Add reserved slugs.
+ *
+ * Accepts slugs as command arguments or reads from stdin when piped:
+ *
+ * ```
+ * bin/cake slug_guard add slug-one slug-two
+ * bin/cake slug_guard routes | bin/cake slug_guard add
+ * ```
  */
 class AddCommand extends Command
 {
+    use StdinReaderTrait;
+
     /**
      * @inheritDoc
      */
@@ -29,7 +38,10 @@ class AddCommand extends Command
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription('Add one or more reserved slugs.');
+        $parser->setDescription(
+            'Add one or more reserved slugs. '
+            . 'Accepts slugs as arguments, or reads from stdin when piped.',
+        );
 
         return $parser;
     }
@@ -45,15 +57,17 @@ class AddCommand extends Command
         /** @var list<string> $slugs */
         $slugs = $args->getArguments();
         if (count($slugs) === 0) {
-            $io->error('At least one slug is required.');
+            $slugs = $this->readFromStdin();
+        }
+        if (count($slugs) === 0) {
+            $io->error('At least one slug is required. Provide arguments or pipe input via stdin.');
 
             return static::CODE_ERROR;
         }
         $added = 0;
 
         foreach ($slugs as $slug) {
-            $result = $table->addSlug($slug);
-            if ($result !== false) {
+            if ($table->addSlug($slug)) {
                 $io->success(sprintf('Added: %s', $slug));
                 $added++;
             } else {

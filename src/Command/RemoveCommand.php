@@ -13,9 +13,18 @@ use Cake\Console\ConsoleOptionParser;
 
 /**
  * Remove reserved slugs.
+ *
+ * Accepts slugs as command arguments or reads from stdin when piped:
+ *
+ * ```
+ * bin/cake slug_guard remove slug-one slug-two
+ * cat slugs-to-remove.txt | bin/cake slug_guard remove
+ * ```
  */
 class RemoveCommand extends Command
 {
+    use StdinReaderTrait;
+
     /**
      * @inheritDoc
      */
@@ -29,7 +38,10 @@ class RemoveCommand extends Command
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription('Remove one or more reserved slugs.');
+        $parser->setDescription(
+            'Remove one or more reserved slugs. '
+            . 'Accepts slugs as arguments, or reads from stdin when piped.',
+        );
 
         return $parser;
     }
@@ -45,7 +57,10 @@ class RemoveCommand extends Command
         /** @var list<string> $slugs */
         $slugs = $args->getArguments();
         if (count($slugs) === 0) {
-            $io->error('At least one slug is required.');
+            $slugs = $this->readFromStdin();
+        }
+        if (count($slugs) === 0) {
+            $io->error('At least one slug is required. Provide arguments or pipe input via stdin.');
 
             return static::CODE_ERROR;
         }
