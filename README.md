@@ -17,6 +17,7 @@ A CakePHP plugin that ensures user-chosen slugs are safe and conflict-free for u
 
 - **SlugValidator** validates that a string is well-formed for use as a subdomain label or URL path segment (lowercase alphanumeric + hyphens, length constraints).
 - **IsNotReservedSlug** compares slugs against a reserved-word list so they never collide with system routes or well-known paths.
+- **IsNotRouteConflict** compares slugs against first-level URL segments extracted from the CakePHP route table to prevent collisions with application routes.
 
 ## Installation
 
@@ -91,6 +92,26 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 ]);
 ```
 
+### Route Conflict Rule
+
+Add the `IsNotRouteConflict` rule to prevent slugs from colliding with application routes (e.g. `/admin`, `/api`, `/posts`):
+
+```php
+use Elastic\SlugGuard\Model\Rule\IsNotRouteConflict;
+
+public function buildRules(RulesChecker $rules): RulesChecker
+{
+    $rules->add(new IsNotRouteConflict('slug'), 'routeConflict', [
+        'errorField' => 'slug',
+        'message' => 'This slug conflicts with an application route.',
+    ]);
+
+    return $rules;
+}
+```
+
+This rule extracts first-level URL path segments from all registered CakePHP routes at runtime and rejects any slug that matches.
+
 ### Slug Format Validator
 
 The `SlugValidator` class provides a static method for validating slug format (lowercase alphanumeric and hyphens):
@@ -134,6 +155,15 @@ bin/cake slug_guard list --count
 bin/cake slug_guard list --search admin
 ```
 
+#### List route paths
+
+```shell
+bin/cake slug_guard routes
+bin/cake slug_guard routes --count
+```
+
+Output is pipe-friendly (one path per line, no decoration). See [Route-based workflow](#route-based-workflow) below.
+
 #### Add reserved slugs
 
 ```shell
@@ -141,11 +171,23 @@ bin/cake slug_guard add my-reserved-slug
 bin/cake slug_guard add slug-one slug-two slug-three
 ```
 
+Supports stdin for pipe usage:
+
+```shell
+bin/cake slug_guard routes | bin/cake slug_guard add
+```
+
 #### Remove reserved slugs
 
 ```shell
 bin/cake slug_guard remove my-reserved-slug
 bin/cake slug_guard remove slug-one slug-two slug-three
+```
+
+Also supports stdin:
+
+```shell
+cat slugs-to-remove.txt | bin/cake slug_guard remove
 ```
 
 #### Import slugs from a file
@@ -226,3 +268,20 @@ bin/cake slug_guard sync --file /path/to/my-slugs.txt
 ```
 
 > **Note:** `import` adds slugs from the file to the database (existing slugs are preserved). `sync` makes the database match the file exactly — slugs not in the file will be removed.
+
+### Route-based Workflow
+
+The `slug_guard routes` command extracts first-level URL path segments from your application's route table. Use it to automatically reserve paths that would conflict with user-generated slugs.
+
+#### Pipe directly to the database
+
+```shell
+bin/cake slug_guard routes | bin/cake slug_guard add
+```
+
+#### Append to your reserved slugs file, then sync
+
+```shell
+bin/cake slug_guard routes >> config/reserved-slugs.txt
+bin/cake slug_guard sync
+```

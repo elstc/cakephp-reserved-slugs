@@ -20,6 +20,10 @@ class Application extends BaseApplication
 
     public function routes(RouteBuilder $routes): void
     {
+        $routes->connect('/admin/dashboard', ['controller' => 'Admin', 'action' => 'dashboard']);
+        $routes->connect('/api/users', ['controller' => 'ApiUsers', 'action' => 'index']);
+        $routes->connect('/posts/{id}', ['controller' => 'Posts', 'action' => 'view']);
+        $routes->connect('/{username}', ['controller' => 'Users', 'action' => 'profile']);
     }
 
     public function bootstrap(): void

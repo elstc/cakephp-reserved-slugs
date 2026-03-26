@@ -17,6 +17,7 @@
 
 - **SlugValidator** — 文字列がサブドメインラベルや URL パスセグメントとして適切な形式かを検証します（小文字英数字 + ハイフン、長さ制約）。
 - **IsNotReservedSlug** — スラッグを予約語リストと照合し、システムルートや既知のパスとの衝突を防止します。
+- **IsNotRouteConflict** — CakePHP のルートテーブルから抽出した第1レベル URL セグメントとスラッグを照合し、アプリケーションルートとの衝突を防止します。
 
 ## インストール
 
@@ -91,6 +92,26 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 ]);
 ```
 
+### ルート衝突ルール
+
+`IsNotRouteConflict` ルールを追加すると、スラッグがアプリケーションルート（例: `/admin`, `/api`, `/posts`）と衝突するのを防止できます：
+
+```php
+use Elastic\SlugGuard\Model\Rule\IsNotRouteConflict;
+
+public function buildRules(RulesChecker $rules): RulesChecker
+{
+    $rules->add(new IsNotRouteConflict('slug'), 'routeConflict', [
+        'errorField' => 'slug',
+        'message' => 'このスラッグはアプリケーションルートと衝突しています。',
+    ]);
+
+    return $rules;
+}
+```
+
+このルールは、登録されたすべての CakePHP ルートから第1レベルの URL パスセグメントを実行時に抽出し、一致するスラッグを拒否します。
+
 ### スラッグ形式バリデーター
 
 `SlugValidator` クラスはスラッグ形式（小文字英数字とハイフン）を検証する静的メソッドを提供します：
@@ -134,6 +155,15 @@ bin/cake slug_guard list --count
 bin/cake slug_guard list --search admin
 ```
 
+#### ルートパスの一覧表示
+
+```shell
+bin/cake slug_guard routes
+bin/cake slug_guard routes --count
+```
+
+出力はパイプフレンドリー（1行1パス、装飾なし）です。[ルートベースのワークフロー](#ルートベースのワークフロー)を参照してください。
+
 #### 予約スラッグの追加
 
 ```shell
@@ -141,11 +171,23 @@ bin/cake slug_guard add my-reserved-slug
 bin/cake slug_guard add slug-one slug-two slug-three
 ```
 
+stdin からのパイプ入力にも対応しています：
+
+```shell
+bin/cake slug_guard routes | bin/cake slug_guard add
+```
+
 #### 予約スラッグの削除
 
 ```shell
 bin/cake slug_guard remove my-reserved-slug
 bin/cake slug_guard remove slug-one slug-two slug-three
+```
+
+stdin からのパイプ入力にも対応しています：
+
+```shell
+cat slugs-to-remove.txt | bin/cake slug_guard remove
 ```
 
 #### ファイルからスラッグをインポート
@@ -226,3 +268,20 @@ bin/cake slug_guard sync --file /path/to/my-slugs.txt
 ```
 
 > **注意:** `import` はファイルのスラッグをデータベースに追加します（既存のスラッグは保持されます）。`sync` はデータベースをファイルと完全に一致させます — ファイルに含まれないスラッグは削除されます。
+
+### ルートベースのワークフロー
+
+`slug_guard routes` コマンドは、アプリケーションのルートテーブルから第1レベルの URL パスセグメントを抽出します。ユーザー生成スラッグと衝突するパスを自動的に予約するために使用できます。
+
+#### パイプで直接データベースに追加
+
+```shell
+bin/cake slug_guard routes | bin/cake slug_guard add
+```
+
+#### 予約スラッグファイルに追記してから同期
+
+```shell
+bin/cake slug_guard routes >> config/reserved-slugs.txt
+bin/cake slug_guard sync
+```
