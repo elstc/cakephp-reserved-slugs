@@ -30,7 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Elastic\\SlugGuard\\": "src/"
+            "Elastic\\SlugGuard\\": "src/",
+            "Elastic\\SlugGuard\\Test\\Fixture\\": "tests/Fixture/"
         }
     },
     "autoload-dev": {

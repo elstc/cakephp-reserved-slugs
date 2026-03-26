@@ -10,7 +10,9 @@
 phpunit.xml export-ignore
 phpcs.xml export-ignore
 /.github export-ignore
-/tests export-ignore
+/tests/bootstrap.php export-ignore
+/tests/TestCase export-ignore
+/tests/test_app export-ignore
 phpstan.neon export-ignore
 phpstan-baseline.neon export-ignore
 .phive export-ignore
