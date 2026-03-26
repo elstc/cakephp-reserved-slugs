@@ -18,6 +18,11 @@ use function Cake\I18n\__d;
 class SlugsFileLoader
 {
     /**
+     * Maximum allowed file size in bytes (1 MB).
+     */
+    private const MAX_FILE_SIZE = 1 * 1024 * 1024;
+
+    /**
      * Parse a slugs text file.
      *
      * File format: one slug per line, `#` comments, empty lines ignored.
@@ -27,6 +32,13 @@ class SlugsFileLoader
      */
     public function parse(string $filePath): array
     {
+        $size = filesize($filePath);
+        if ($size === false || $size > self::MAX_FILE_SIZE) {
+            throw new RuntimeException(
+                __d('elastic/slug_guard', 'File too large or unreadable: {0}', $filePath),
+            );
+        }
+
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
             throw new RuntimeException(__d('elastic/slug_guard', 'Failed to read file: {0}', $filePath));
