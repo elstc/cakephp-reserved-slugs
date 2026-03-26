@@ -1,39 +1,39 @@
-# CakePHP Plugin プロジェクト構造
+# CakePHP Plugin Project Structure
 
-## ディレクトリ構造
+## Directory Structure
 
 ```
 my-plugin/
-├── .editorconfig              # エディタ設定
-├── .gitattributes             # Git属性（export-ignore等）
-├── .gitignore                 # Git除外設定
+├── .editorconfig              # Editor settings
+├── .gitattributes             # Git attributes (export-ignore, etc.)
+├── .gitignore                 # Git ignore settings
 ├── .github/
 │   └── workflows/
-│       ├── ci.yml             # CI設定（必須）
-│       └── stale.yml          # Stale issue管理（任意）
+│       ├── ci.yml             # CI configuration (required)
+│       └── stale.yml          # Stale issue management (optional)
 ├── .phive/
-│   └── phars.xml              # PHPStan等のPHARツール管理
-├── composer.json              # Composer設定（必須）
-├── LICENSE.txt                # ライセンスファイル（MIT推奨）
-├── phpcs.xml                  # PHPCSルール設定
-├── phpstan.neon               # PHPStan設定
-├── phpstan-baseline.neon      # PHPStan ベースライン
-├── phpunit.xml.dist           # PHPUnit設定
-├── README.md                  # プロジェクト説明
-├── src/                       # ソースコード
-│   ├── Plugin.php             # プラグインクラス（必要に応じて）
+│   └── phars.xml              # PHAR tool management (PHPStan, etc.)
+├── composer.json              # Composer configuration (required)
+├── LICENSE.txt                # License file (MIT recommended)
+├── phpcs.xml                  # PHPCS rule configuration
+├── phpstan.neon               # PHPStan configuration
+├── phpstan-baseline.neon      # PHPStan baseline
+├── phpunit.xml.dist           # PHPUnit configuration
+├── README.md                  # Project description
+├── src/                       # Source code
+│   ├── Plugin.php             # Plugin class (if needed)
 │   └── ...
-├── tests/                     # テストコード
-│   ├── bootstrap.php          # テスト用ブートストラップ
-│   ├── TestCase/              # テストケース
-│   ├── test_app/              # テスト用アプリケーション
-│   └── data/                  # テストデータ（任意）
-├── config/                    # 設定ファイル（任意）
-├── templates/                 # テンプレートファイル（任意）
-└── Docs/                      # ドキュメント（任意）
+├── tests/                     # Test code
+│   ├── bootstrap.php          # Test bootstrap
+│   ├── TestCase/              # Test cases
+│   ├── test_app/              # Test application
+│   └── data/                  # Test data (optional)
+├── config/                    # Configuration files (optional)
+├── templates/                 # Template files (optional)
+└── Docs/                      # Documentation (optional)
 ```
 
-## 必須ファイル
+## Required Files
 
 ### .editorconfig
 
@@ -128,8 +128,8 @@ nbproject/*
 .vscode
 ```
 
-## 名前空間規則
+## Namespace Conventions
 
-- プラグイン名前空間: `{VendorName}\{PluginName}\`
-- 例: `Authentication\`, `Authorization\`, `DebugKit\`
-- PSR-4オートロードに従う
+- Plugin namespace: `{VendorName}\{PluginName}\`
+- Examples: `Authentication\`, `Authorization\`, `DebugKit\`
+- Follow PSR-4 autoloading

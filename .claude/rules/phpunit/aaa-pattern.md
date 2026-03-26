@@ -2,44 +2,43 @@
 paths:
   - tests/
 ---
-# AAA（Arrange-Act-Assert）テスト記述パターン - PHPUnit
+# AAA (Arrange-Act-Assert) Test Pattern - PHPUnit
 
-## 概要
+## Overview
 
-AAAパターンは、テストコードを3つの明確なセクションに分割する記述方式である。
-可読性が高く、テストの意図が明確になるため、すべてのテストでこのパターンを採用する。
+The AAA pattern divides test code into three distinct sections. It enhances readability and clarifies test intent, so adopt this pattern for all tests.
 
-## 3つのフェーズ
+## Three Phases
 
-### 1. Arrange（準備）
+### 1. Arrange
 
-テストに必要なオブジェクト、データ、状態をセットアップする。
+Set up the objects, data, and state needed for the test.
 
-- テスト対象オブジェクトのインスタンス化
-- モック・スタブの設定
-- テストデータの準備
-- 前提条件の設定
+- Instantiate the system under test
+- Configure mocks and stubs
+- Prepare test data
+- Set preconditions
 
-### 2. Act（実行）
+### 2. Act
 
-テスト対象の操作を1つだけ実行する。
+Execute exactly one operation on the system under test.
 
-- テスト対象メソッドの呼び出し
-- 戻り値の取得
-- 副作用の発生
+- Call the target method
+- Capture the return value
+- Trigger side effects
 
-### 3. Assert（検証）
+### 3. Assert
 
-期待する結果を検証する。
+Verify the expected results.
 
-- 戻り値の検証
-- 状態変化の検証
-- 例外の検証
-- 副作用の検証
+- Verify return values
+- Verify state changes
+- Verify exceptions
+- Verify side effects
 
-## コード例
+## Code Examples
 
-### 基本的なテスト
+### Basic Test
 
 ```php
 <?php
@@ -51,160 +50,160 @@ use PHPUnit\Framework\Attributes\Test;
 class OrderServiceTest extends TestCase
 {
     #[Test]
-    public function 注文合計金額を正しく計算できること(): void
+    public function calculateTotal_withMultipleItems_returnsCorrectSum(): void
     {
         // Arrange
         // -----------------------------------------------
-        // 注文オブジェクトと商品を準備する
+        // Prepare order object and items
         $order = new Order();
-        $order->addItem(new OrderItem('商品A', 1000, 2));
-        $order->addItem(new OrderItem('商品B', 500, 3));
+        $order->addItem(new OrderItem('Product A', 1000, 2));
+        $order->addItem(new OrderItem('Product B', 500, 3));
 
         // Act
         // -----------------------------------------------
-        // 合計金額を計算する
+        // Calculate the total
         $total = $order->calculateTotal();
 
         // Assert
         // -----------------------------------------------
-        // 合計金額が正しいことを検証する
+        // Verify the total is correct
         $this->assertSame(3500, $total);
     }
 }
 ```
 
-### 例外テスト
+### Exception Test
 
 ```php
 #[Test]
-public function 在庫不足の場合は例外が発生すること(): void
+public function placeOrder_withInsufficientStock_throwsException(): void
 {
     // Arrange
     // -----------------------------------------------
-    // 在庫チェックが失敗するモックを準備する
+    // Prepare a mock that fails stock check
     $stockService = $this->createMock(StockService::class);
     $stockService->method('checkStock')->willReturn(false);
     $orderService = new OrderService($stockService);
     $order = new Order();
-    $order->addItem(new OrderItem('商品A', 1000, 100));
+    $order->addItem(new OrderItem('Product A', 1000, 100));
 
     // Assert
     // -----------------------------------------------
-    // 例外検証は実行前に宣言する
+    // Declare exception expectation before Act
     $this->expectException(InsufficientStockException::class);
-    $this->expectExceptionMessage('在庫が不足しています');
+    $this->expectExceptionMessage('Insufficient stock');
 
     // Act
     // -----------------------------------------------
-    // 注文を実行する
+    // Place the order
     $orderService->placeOrder($order);
 }
 ```
 
-### モックを使った副作用の検証
+### Verifying Side Effects with Mocks
 
 ```php
 #[Test]
-public function 注文完了時にメール通知が送信されること(): void
+public function placeOrder_onCompletion_sendsEmailNotification(): void
 {
     // Arrange
     // -----------------------------------------------
-    // メール送信モックと注文を準備する
+    // Prepare email mock and order
     $mailer = $this->createMock(MailerInterface::class);
     $mailer->expects($this->once())
         ->method('send')
         ->with($this->callback(function ($mail) {
-            return $mail->getSubject() === '注文完了のお知らせ';
+            return $mail->getSubject() === 'Order Confirmation';
         }));
     $orderService = new OrderService(mailer: $mailer);
     $order = new Order(customerEmail: 'test@example.com');
 
     // Act
     // -----------------------------------------------
-    // 注文を実行する
+    // Place the order
     $orderService->placeOrder($order);
 
     // Assert
     // -----------------------------------------------
-    // モックの expects で検証済み
+    // Verified by mock expects above
 }
 ```
 
-## ベストプラクティス
+## Best Practices
 
-### コメントの活用
+### Use Comments
 
-各セクションの先頭に視覚的に区切られたコメントブロックを記述する。
+Write a visually separated comment block at the beginning of each section.
 
 ```php
 // Arrange
 // -----------------------------------------------
-// テストデータを準備する
+// Prepare test data
 $user = new User('test@example.com');
 
 // Act
 // -----------------------------------------------
-// メールアドレスの妥当性を検証する
+// Validate the email address
 $result = $user->isValidEmail();
 
 // Assert
 // -----------------------------------------------
-// 妥当なメールアドレスであることを確認する
+// Verify the email is valid
 $this->assertTrue($result);
 ```
 
-### 空行による分離
+### Separate with Blank Lines
 
-各セクション間は空行で分離し、視覚的な区切りを明確にする。
+Separate each section with blank lines for visual clarity.
 
-### Act は1つの操作に限定する
+### Limit Act to One Operation
 
-1つのテストで1つの振る舞いのみをテストする。
+Test only one behavior per test.
 
 ```php
-// ❌ 悪い例：複数の操作
+// Bad: Multiple operations
 // Act
 $order->addItem($item);
 $order->applyDiscount(10);
 $total = $order->calculateTotal();
 
-// ✅ 良い例：1つの操作
+// Good: Single operation
 // Arrange
 // -----------------------------------------------
-// 前提条件として注文に商品と割引を設定する
+// Set up order with item and discount as preconditions
 $order->addItem($item);
 $order->applyDiscount(10);
 
 // Act
 // -----------------------------------------------
-// 合計金額を計算する
+// Calculate the total
 $total = $order->calculateTotal();
 ```
 
-### Arrange のヘルパーメソッド化
+### Extract Arrange into Helper Methods
 
-Arrange が長くなる場合は、セットアップをヘルパーメソッドに抽出する。
+When Arrange becomes long, extract setup into helper methods.
 
 ```php
 #[Test]
-public function 有効な注文の合計金額を計算できること(): void
+public function calculateTotal_withValidOrder_returnsCorrectSum(): void
 {
     // Arrange
     // -----------------------------------------------
-    // 複数商品を含む注文を準備する
+    // Prepare order with multiple items
     $order = $this->createOrderWithItems([
-        ['name' => '商品A', 'price' => 1000, 'quantity' => 2],
-        ['name' => '商品B', 'price' => 500, 'quantity' => 3],
+        ['name' => 'Product A', 'price' => 1000, 'quantity' => 2],
+        ['name' => 'Product B', 'price' => 500, 'quantity' => 3],
     ]);
 
     // Act
     // -----------------------------------------------
-    // 合計金額を計算する
+    // Calculate the total
     $total = $order->calculateTotal();
 
     // Assert
     // -----------------------------------------------
-    // 合計金額が正しいことを検証する
+    // Verify the total is correct
     $this->assertSame(3500, $total);
 }
 
@@ -222,12 +221,12 @@ private function createOrderWithItems(array $items): Order
 }
 ```
 
-## アンチパターン
+## Anti-patterns
 
-### ❌ 複数の Assert の分散
+### Scattered Assertions
 
 ```php
-// 悪い例：Act の前後に Assert が分散
+// Bad: Assertions scattered before and after Act
 $this->assertSame(0, $cart->getItemCount());  // Assert
 $cart->addItem($item);                         // Act
 $this->assertSame(1, $cart->getItemCount());  // Assert
@@ -235,66 +234,66 @@ $cart->addItem($item);                         // Act
 $this->assertSame(2, $cart->getItemCount());  // Assert
 ```
 
-### ❌ Arrange と Act の混在
+### Mixed Arrange and Act
 
 ```php
-// 悪い例：準備と実行が混在
+// Bad: Setup and execution mixed together
 $user = new User();
-$user->setName('テスト');      // これは Arrange
-$result1 = $user->validate();  // これは Act？
-$user->setEmail('test@example.com');  // これは Arrange
-$result2 = $user->save();      // これも Act？
+$user->setName('Test');            // This is Arrange
+$result1 = $user->validate();      // Is this Act?
+$user->setEmail('test@example.com');  // This is Arrange
+$result2 = $user->save();          // Is this also Act?
 ```
 
-### ❌ Assert の欠落
+### Missing Assert
 
 ```php
-// 悪い例：検証がない
+// Bad: No verification
 #[Test]
-public function なにかをテストする(): void
+public function testSomething(): void
 {
     $service = new SomeService();
     $service->doSomething();
-    // Assert がない！
+    // No assertion!
 }
 ```
 
-## 例外テストのパターン
+## Exception Test Patterns
 
-PHPUnit では `expectException` は Act の前に宣言する。
+In PHPUnit, `expectException` must be declared before the Act phase.
 
 ```php
 // Arrange
 // -----------------------------------------------
-// 決済サービスを準備する
+// Prepare the payment service
 $service = new PaymentService();
 
 // Assert
 // -----------------------------------------------
-// 例外期待の宣言
+// Declare exception expectation
 $this->expectException(InvalidArgumentException::class);
-$this->expectExceptionMessage('金額は正の数である必要があります');
+$this->expectExceptionMessage('Amount must be a positive number');
 
 // Act
 // -----------------------------------------------
-// 不正な金額で処理を実行する
+// Execute with invalid amount
 $service->process(-100);
 ```
 
-## アサーションの使い分け
+## Assertion Usage Guide
 
-`assertSame` を `assertEquals` より優先して使用する（型の厳密な比較）。
+Prefer `assertSame` over `assertEquals` (strict type comparison).
 
 ```php
-// ✅ 推奨：型も含めて厳密に比較
+// Recommended: Strict comparison including type
 $this->assertSame(3500, $total);
 $this->assertSame('expected', $actual);
 
-// ❌ 非推奨：型の比較が緩い
+// Not recommended: Loose type comparison
 $this->assertEquals(3500, $total);
 ```
 
-## 参考文献
+## References
 
 - [Arrange-Act-Assert pattern - Microsoft](https://docs.microsoft.com/en-us/visualstudio/test/unit-test-basics)
 - [PHPUnit Documentation](https://docs.phpunit.de/)

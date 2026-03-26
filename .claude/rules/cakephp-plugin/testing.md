@@ -1,27 +1,27 @@
 ---
 paths:
-  - tests/
+  - "tests/"
 ---
-# CakePHP Plugin テスト作成ガイドライン
+# CakePHP Plugin Testing Guidelines
 
-## ディレクトリ構造
+## Directory Structure
 
 ```
 tests/
-├── bootstrap.php              # テスト用ブートストラップ
-├── TestCase/                  # テストケース
-│   ├── AuthenticatorTest.php  # 例: 認証系テスト
-│   └── {Category}/            # カテゴリ別サブディレクトリ
+├── bootstrap.php              # Test bootstrap
+├── TestCase/                  # Test cases
+│   ├── AuthenticatorTest.php  # Example: authentication tests
+│   └── {Category}/            # Category subdirectories
 │       └── SomeTest.php
-├── test_app/                  # テスト用アプリケーション
-│   ├── TestApp/               # テストアプリ本体
+├── test_app/                  # Test application
+│   ├── TestApp/               # Test app main
 │   │   ├── Application.php
 │   │   └── ...
-│   ├── Plugin/                # テスト用プラグイン
+│   ├── Plugin/                # Test plugins
 │   │   └── TestPlugin/
-│   ├── config/                # テスト用設定
-│   └── templates/             # テスト用テンプレート
-└── data/                      # テストデータ（任意）
+│   ├── config/                # Test configuration
+│   └── templates/             # Test templates
+└── data/                      # Test data (optional)
 ```
 
 ## bootstrap.php
@@ -117,7 +117,7 @@ $_SERVER['PHP_SELF'] = '/';
             <directory suffix=".php">src/</directory>
         </include>
         <exclude>
-            <!-- 必要に応じてカバレッジ除外ファイルを指定 -->
+            <!-- Exclude files from coverage as needed -->
         </exclude>
     </source>
 
@@ -128,7 +128,7 @@ $_SERVER['PHP_SELF'] = '/';
 </phpunit>
 ```
 
-## テストクラスの基本構造
+## Basic Test Class Structure
 
 ```php
 <?php
@@ -156,7 +156,7 @@ class SomeFeatureTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // テストのセットアップ
+        // Test setup
     }
 
     /**
@@ -165,7 +165,7 @@ class SomeFeatureTest extends TestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        // テストのクリーンアップ
+        // Test cleanup
     }
 
     /**
@@ -180,28 +180,28 @@ class SomeFeatureTest extends TestCase
 }
 ```
 
-## テスト命名規則
+## Test Naming Conventions
 
-- テストクラス: `{対象クラス名}Test.php`
-- テストメソッド: `test{テスト対象の動作を説明する名前}`
+- Test class: `{TargetClassName}Test.php`
+- Test method: `test{DescriptiveBehaviorName}`
 
-例:
+Examples:
 - `SessionAuthenticatorTest.php`
 - `testAuthenticateSuccess()`
 - `testAuthenticateWithInvalidCredentials()`
 
-## Fixture の使用
+## Fixture Usage
 
-CakePHP の Fixture を活用してテストデータを管理する：
+Use CakePHP fixtures to manage test data:
 
 ```php
 protected array $fixtures = [
-    'core.AuthUsers',          // CakePHP コアの Fixture
-    'plugin.MyPlugin.Items',   // プラグイン固有の Fixture
+    'core.AuthUsers',          // CakePHP core fixtures
+    'plugin.MyPlugin.Items',   // Plugin-specific fixtures
 ];
 ```
 
-## モックの活用
+## Mocking
 
 ```php
 $this->sessionMock = $this->getMockBuilder(Session::class)
@@ -215,14 +215,14 @@ $this->sessionMock->expects($this->once())
     ->willReturn(['username' => 'test']);
 ```
 
-## アサーション
+## Assertions
 
-`assertSame` を `assertEquals` より優先して使用する（型の厳密な比較）：
+Prefer `assertSame` over `assertEquals` (strict type comparison):
 
 ```php
-// 推奨
+// Recommended
 $this->assertSame('expected', $actual);
 
-// 非推奨
+// Not recommended
 $this->assertEquals('expected', $actual);
 ```

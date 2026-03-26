@@ -1,12 +1,17 @@
-# CakePHP Plugin コード品質管理ガイドライン
+---
+paths:
+  - "phpcs.xml"
+  - "phpstan.neon"
+---
+# CakePHP Plugin Code Quality Management
 
-## コーディング規約（PHPCS）
+## Coding Standards (PHPCS)
 
 ### phpcs.xml
 
 ```xml
 <?xml version="1.0"?>
-<ruleset name="CakePHP Core">
+<ruleset name="CakePHP Plugin">
     <rule ref="CakePHP"/>
 
     <file>src/</file>
@@ -14,40 +19,50 @@
 </ruleset>
 ```
 
-### 実行コマンド
+### Commands
 
 ```bash
-# チェック
+# Check
 composer cs-check
-# または
+# or
 vendor/bin/phpcs --colors -p src/ tests/
 
-# 自動修正
+# Auto-fix
 composer cs-fix
-# または
+# or
 vendor/bin/phpcbf --colors -p src/ tests/
 ```
 
-## 静的解析（PHPStan）
+## Static Analysis (PHPStan)
 
-### ツールインストール（phive）
+### Tool Installation (phive)
 
 `.phive/phars.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <phive xmlns="https://phar.io/phive">
-  <phar name="phpstan" version="2.1.x" installed="2.1.33" location="./tools/phpstan" copy="false"/>
+  <phar name="phpstan" version="^2" installed="2.1.33" location="./tools/phpstan" copy="false"/>
 </phive>
 ```
 
-インストール:
+Installation:
 
 ```bash
 composer stan-setup
-# または
+# or
 phive install
 ```
+
+### Keep PHPStan Up to Date
+
+Always update PHPStan to the latest version when setting up or modifying a project:
+
+```bash
+phive update phpstan
+```
+
+When the installed version in `.phive/phars.xml` is outdated, update it by running the command above. This ensures you get the latest analysis rules and bug fixes.
 
 ### phpstan.neon
 
@@ -64,36 +79,36 @@ parameters:
         - identifier: missingType.iterableValue
 ```
 
-### 推奨レベル
+### Recommended Level
 
-| レベル | 説明 |
-|--------|------|
-| 8 | 最高レベル（CakePHP公式プラグイン標準） |
+| Level | Description |
+|-------|-------------|
+| 8 | Maximum level (CakePHP official plugin standard) |
 
-### ベースライン管理
+### Baseline Management
 
-新規エラーを防ぎながら既存エラーを段階的に修正：
+Prevent new errors while gradually fixing existing ones:
 
 ```bash
-# ベースライン生成
+# Generate baseline
 composer stan-baseline
-# または
+# or
 tools/phpstan --generate-baseline
 ```
 
-### 実行コマンド
+### Commands
 
 ```bash
 composer phpstan
-# または
+# or
 tools/phpstan analyse
 ```
 
-## 依存関係
+## Dependencies
 
 ### cakephp-codesniffer
 
-CakePHP専用のコーディング規約：
+CakePHP-specific coding standards:
 
 ```json
 {
@@ -103,7 +118,7 @@ CakePHP専用のコーディング規約：
 }
 ```
 
-### allow-plugins 設定
+### allow-plugins Configuration
 
 ```json
 {
@@ -115,18 +130,18 @@ CakePHP専用のコーディング規約：
 }
 ```
 
-## PHP宣言
+## PHP Declarations
 
-### 厳密な型宣言
+### Strict Type Declaration
 
-すべてのPHPファイルの先頭に記述：
+Add at the top of every PHP file:
 
 ```php
 <?php
 declare(strict_types=1);
 ```
 
-### ライセンスヘッダ
+### License Header
 
 ```php
 <?php
@@ -146,12 +161,12 @@ declare(strict_types=1);
  */
 ```
 
-## CI での品質チェック
+## CI Quality Checks
 
-cs-stan ワークフローが以下を実行する：
+The cs-stan workflow executes the following:
 
-1. PHPStan による静的解析
-2. PHPCS によるコーディング規約チェック
+1. Static analysis with PHPStan
+2. Coding standards check with PHPCS
 
 ```yaml
 cs-stan:
@@ -159,11 +174,11 @@ cs-stan:
   secrets: inherit
 ```
 
-## 品質チェックの実行順序
+## Quality Check Execution Order
 
-1. コーディング規約チェック（高速）
-2. 静的解析（中速）
-3. ユニットテスト（低速）
+1. Coding standards check (fast)
+2. Static analysis (medium)
+3. Unit tests (slow)
 
 ```json
 {

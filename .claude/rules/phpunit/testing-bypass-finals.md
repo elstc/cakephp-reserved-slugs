@@ -3,50 +3,49 @@ paths:
   - tests/
 ---
 
-# bypass-finals の使用ガイドライン
+# bypass-finals Usage Guidelines
 
-本プロジェクトでは、`dg/bypass-finals` を使用して `final` クラスのモックを可能にしている。
-このライブラリは強力だが、設計意図を無効化する可能性があるため、使用ケースを限定する。
+This project uses `dg/bypass-finals` to enable mocking of `final` classes. This library is powerful but can override design intent, so restrict its usage to specific cases.
 
-## 使用が許容されるケース
+## Acceptable Use Cases
 
-1. **サードパーティライブラリの `final` クラス**
-   - インターフェースが提供されていない場合
-   - ライブラリ側でモックを想定していない設計の場合
+1. **Third-party library `final` classes**
+   - When no interface is provided
+   - When the library does not intend for mocking in its design
 
-## 避けるべきケース
+## Cases to Avoid
 
-1. **自プロジェクトのドメインレイヤーの `final readonly` クラス**
-   - 代わりにインターフェースを定義し、テストダブルを作成する
-   - 機能テスト（結合テスト）で実際のクラスを使用して検証する
+1. **`final readonly` classes in the project's domain layer**
+   - Define interfaces and create test doubles instead
+   - Use functional (integration) tests to verify with actual classes
 
-2. **`final` の意図を理解せずにモックする**
-   - `final` は継承を禁止する意図的な設計判断
-   - モックが必要な場合は、設計の見直しを検討する
- 
-## 推奨アプローチ
+2. **Mocking `final` classes without understanding the intent**
+   - `final` is an intentional design decision to prohibit inheritance
+   - If mocking is needed, consider revising the design
 
-`final` クラスをモックする必要がある場合は、以下の順序で検討する:
+## Recommended Approach
 
-1. **インターフェース経由での依存注入**
-   - `final` クラスがインターフェースを実装している場合、インターフェースに依存させる
-   - テスト時はインターフェースのモックを使用
+When you need to mock a `final` class, consider the following options in order:
 
-2. **機能テストでの検証**
-   - ユニットテストでモックせず、機能テストで実際のクラスを使用
-   - 外部依存（DB、API等）のみをモック
+1. **Dependency injection via interfaces**
+   - If the `final` class implements an interface, depend on the interface
+   - Use interface mocks in tests
 
-3. **最終手段としての bypass-finals**
-   - 上記が困難な場合のみ、bypass-finals を使用
-   - 使用理由をテストコードにコメントで明記
+2. **Verification through functional tests**
+   - Skip unit test mocking and use actual classes in functional tests
+   - Only mock external dependencies (DB, APIs, etc.)
+
+3. **bypass-finals as a last resort**
+   - Use bypass-finals only when the above approaches are impractical
+   - Document the reason in the test code with a comment
 
 ```php
 /**
  * @covers ::someMethod
- * @note bypass-finals使用: CakePHPのEntityクラスがfinalのため
+ * @note bypass-finals used: CakePHP Entity class is final
  */
 public function testSomeMethod(): void
 {
-    // テストコード
+    // Test code
 }
 ```

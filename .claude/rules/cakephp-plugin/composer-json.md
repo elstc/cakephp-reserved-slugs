@@ -1,10 +1,14 @@
-# CakePHP Plugin composer.json 設定
+---
+paths:
+  - "composer.json"
+---
+# CakePHP Plugin composer.json Configuration
 
-## 基本構造
+## Basic Structure
 
 ```json
 {
-    "name": "cakephp/{plugin-name}",
+    "name": "{vendor-name}/{plugin-name}",
     "description": "Plugin description for CakePHP",
     "license": "MIT",
     "type": "cakephp-plugin",
@@ -14,8 +18,8 @@
     ],
     "authors": [
         {
-            "name": "CakePHP Community",
-            "homepage": "https://github.com/cakephp/{plugin-name}/graphs/contributors"
+            "name": "{author name}",
+            "homepage": "https://github.com/{vendor-name}/{plugin-name}/graphs/contributors"
         }
     ],
     "homepage": "https://cakephp.org",
@@ -75,45 +79,45 @@
 }
 ```
 
-## 重要なフィールド
+## Key Fields
 
 ### type
 
-`cakephp-plugin` を必ず指定する。これにより、CakePHPがプラグインを正しく認識する。
+Must be set to `cakephp-plugin`. This allows CakePHP to correctly recognize the plugin.
 
 ### autoload / autoload-dev
 
-- `autoload`: 本番コード用（src/）
-- `autoload-dev`: テストコード用
+- `autoload`: Production code (src/)
+- `autoload-dev`: Test code
   - `PluginNamespace\Test\`: tests/
-  - `Cake\Test\`: CakePHPのテストユーティリティ
-  - `TestApp\`: テストアプリケーション用
+  - `Cake\Test\`: CakePHP test utilities
+  - `TestApp\`: Test application
 
 ### scripts
 
-推奨されるComposerスクリプト：
+Recommended Composer scripts:
 
-| スクリプト | 用途 |
-|-----------|------|
-| `check` | cs-check と test を実行 |
-| `cs-check` | コーディング規約チェック |
-| `cs-fix` | コーディング規約の自動修正 |
-| `phpstan` | 静的解析実行 |
-| `stan-setup` | PHPStan を phive でインストール |
-| `test` | PHPUnitテスト実行 |
-| `test-coverage` | カバレッジ付きテスト実行 |
-| `update-lowest` | 最小依存バージョンでの互換性確認用に依存を更新 |
+| Script | Purpose |
+|--------|---------|
+| `check` | Run cs-check and test |
+| `cs-check` | Coding standards check |
+| `cs-fix` | Auto-fix coding standards |
+| `phpstan` | Run static analysis |
+| `stan-setup` | Install PHPStan via phive |
+| `test` | Run PHPUnit tests |
+| `test-coverage` | Run tests with coverage |
+| `update-lowest` | Update dependencies to lowest versions for compatibility check |
 
 ### require-dev
 
-CakePHPプラグイン開発で必須の開発依存関係：
+Required development dependencies for CakePHP plugin development:
 
-- `cakephp/cakephp-codesniffer`: CakePHPコーディング規約
-- `phpunit/phpunit`: テストフレームワーク
+- `cakephp/cakephp-codesniffer`: CakePHP coding standards
+- `phpunit/phpunit`: Testing framework
 
-## PHPバージョン対応
+## PHP Version Support
 
-CakePHP 5.x系は PHP 8.1 以上を必要とする：
+CakePHP 5.x requires PHP 8.1 or higher:
 
 ```json
 {
@@ -123,8 +127,8 @@ CakePHP 5.x系は PHP 8.1 以上を必要とする：
 }
 ```
 
-## 依存関係の最小化
+## Minimize Dependencies
 
-- フレームワーク全体ではなく、必要なコンポーネントのみを依存として指定する
-- 例: `cakephp/http`, `cakephp/orm` など個別パッケージ
-- PSR標準パッケージ（`psr/http-message` など）を活用する
+- Specify only the required components, not the entire framework
+- Example: `cakephp/http`, `cakephp/orm` as individual packages
+- Leverage PSR standard packages (`psr/http-message`, etc.)

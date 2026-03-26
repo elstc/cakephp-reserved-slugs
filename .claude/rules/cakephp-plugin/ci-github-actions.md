@@ -1,12 +1,16 @@
-# CakePHP Plugin CI/GitHub Actions 設定ガイドライン
+---
+paths:
+  - ".github/workflows/"
+---
+# CakePHP Plugin CI / GitHub Actions Configuration
 
-## 概要
+## Overview
 
-CakePHP公式プラグインは `cakephp/.github` リポジトリの再利用可能ワークフローを活用している。
+Official CakePHP plugins leverage reusable workflows from the `cakephp/.github` repository.
 
-## 基本構成
+## Basic Configuration
 
-### シンプルなプラグイン（データベース不要）
+### Simple Plugin (No Database)
 
 ```yaml
 name: CI
@@ -34,7 +38,7 @@ jobs:
     secrets: inherit
 ```
 
-### データベースを使用するプラグイン
+### Plugin with Database
 
 ```yaml
 name: CI
@@ -62,19 +66,19 @@ jobs:
     secrets: inherit
 ```
 
-## 再利用可能ワークフロー
+## Reusable Workflows
 
-CakePHP公式が提供する再利用可能ワークフロー：
+Reusable workflows provided by CakePHP official:
 
-| ワークフロー | 用途 |
-|-------------|------|
-| `testsuite-without-db.yml` | データベース不要のテスト実行 |
-| `testsuite-with-db.yml` | データベース使用のテスト実行 |
-| `cs-stan.yml` | コーディング規約 + PHPStan |
+| Workflow | Purpose |
+|----------|---------|
+| `testsuite-without-db.yml` | Test execution without database |
+| `testsuite-with-db.yml` | Test execution with database |
+| `cs-stan.yml` | Coding standards + PHPStan |
 
-## カスタムCIの作成（複数DB対応）
+## Custom CI (Multiple DB Support)
 
-複雑なデータベーステストが必要な場合：
+For complex database testing needs:
 
 ```yaml
 name: CI
@@ -166,7 +170,7 @@ jobs:
     secrets: inherit
 ```
 
-## Stale Issue/PR 管理
+## Stale Issue/PR Management
 
 ```yaml
 name: Mark stale issues and pull requests
@@ -193,9 +197,9 @@ jobs:
         exempt-pr-labels: 'pinned'
 ```
 
-## PHPバージョンマトリクス
+## PHP Version Matrix
 
-推奨されるPHPバージョンのテスト構成：
+Recommended PHP version test configuration:
 
 ```yaml
 matrix:
@@ -203,12 +207,12 @@ matrix:
   dependencies: [highest]
   include:
     - php-version: '8.1'
-      dependencies: lowest  # 最小依存バージョンのテスト
+      dependencies: lowest  # Test with minimum dependency versions
 ```
 
-## コードカバレッジ
+## Code Coverage
 
-Codecov を使用したカバレッジレポート：
+Coverage reporting with Codecov:
 
 ```yaml
 - name: Run PHPUnit with coverage
@@ -220,12 +224,12 @@ Codecov を使用したカバレッジレポート：
     token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-## ベストプラクティス
+## Best Practices
 
-1. `persist-credentials: false` を checkout で設定し、セキュリティを強化する
-2. Composer キャッシュを活用して CI 実行時間を短縮する
-3. `fail-fast: false` でマトリクス全体のテスト結果を取得する
-4. 最小依存バージョン（prefer-lowest）でのテストを含める
-5. `permissions: contents: read` で最小限の権限を設定する
-6. `schedule` で月1回の定期ビルドを設定し、依存関係の破壊的変更を早期に検出する
-7. 複数のCakePHPバージョンでテストを実行し、互換性を保証する
+1. Set `persist-credentials: false` on checkout for improved security
+2. Use Composer caching to reduce CI execution time
+3. Set `fail-fast: false` to get full matrix test results
+4. Include minimum dependency version testing (prefer-lowest)
+5. Set `permissions: contents: read` for minimal permissions
+6. Configure monthly scheduled builds with `schedule` to detect breaking changes in dependencies early
+7. Run tests across multiple CakePHP versions to ensure compatibility
