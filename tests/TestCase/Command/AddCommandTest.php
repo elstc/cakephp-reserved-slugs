@@ -22,8 +22,12 @@ class AddCommandTest extends TestCase
 
     public function testAddNewSlug(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard add new-slug');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertOutputContains('Added: new-slug');
         $this->assertOutputContains('Added 1 slug(s).');
@@ -52,8 +56,12 @@ class AddCommandTest extends TestCase
 
     public function testAddDuplicateSlug(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard add admin');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertErrorContains('Already exists: admin');
         $this->assertOutputContains('Added 0 slug(s).');

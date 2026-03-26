@@ -23,27 +23,36 @@ class ImportCommandTest extends TestCase
     public function testImportFromFile(): void
     {
         // Arrange
+        // -----------------------------------------------
         $file = TMP . 'test_cmd_import.txt';
         file_put_contents($file, "admin\nnew-import\nanother-import\n");
 
-        // Act
-        $this->exec('slug_guard import ' . $file);
+        try {
+            // Act
+            // -----------------------------------------------
+            $this->exec('slug_guard import ' . $file);
 
-        // Assert
-        $this->assertExitSuccess();
-        $this->assertOutputContains('Imported 2 new slug(s).');
+            // Assert
+            // -----------------------------------------------
+            $this->assertExitSuccess();
+            $this->assertOutputContains('Imported 2 new slug(s).');
 
-        $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
-        $this->assertTrue($table->exists(['slug' => 'new-import']));
-        $this->assertTrue($table->exists(['slug' => 'another-import']));
-
-        unlink($file);
+            $table = $this->fetchTable('Elastic/SlugGuard.ReservedSlugs');
+            $this->assertTrue($table->exists(['slug' => 'new-import']));
+            $this->assertTrue($table->exists(['slug' => 'another-import']));
+        } finally {
+            unlink($file);
+        }
     }
 
     public function testImportFromNonExistentFile(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard import /nonexistent/file.txt');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitError();
         $this->assertErrorContains('File not found');
     }

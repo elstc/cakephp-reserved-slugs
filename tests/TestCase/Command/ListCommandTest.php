@@ -22,8 +22,12 @@ class ListCommandTest extends TestCase
 
     public function testListAllSlugs(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard list');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertOutputContains('admin');
         $this->assertOutputContains('api');
@@ -32,16 +36,24 @@ class ListCommandTest extends TestCase
 
     public function testListWithCount(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard list --count');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertOutputContains('5');
     }
 
     public function testListWithSearch(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard list --search bl');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertOutputContains('blog');
         $this->assertOutputNotContains('admin');
@@ -49,8 +61,12 @@ class ListCommandTest extends TestCase
 
     public function testListWithSearchNoResults(): void
     {
+        // Act
+        // -----------------------------------------------
         $this->exec('slug_guard list --search zzzzz');
 
+        // Assert
+        // -----------------------------------------------
         $this->assertExitSuccess();
         $this->assertOutputContains('No reserved slugs found.');
     }
