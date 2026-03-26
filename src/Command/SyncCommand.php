@@ -12,6 +12,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Elastic\SlugGuard\Lib\SlugsSyncService;
 use InvalidArgumentException;
+use function Cake\I18n\__d;
 
 /**
  * Sync reserved slugs with a text file.
@@ -32,16 +33,23 @@ class SyncCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser
-            ->setDescription('Sync reserved slugs with a text file. Adds missing slugs and removes extra slugs.')
+            ->setDescription(
+                __d(
+                    'elastic/slug_guard',
+                    'Sync reserved slugs with a text file. Adds missing slugs and removes extra slugs.',
+                ),
+            )
             ->addOption('file', [
                 'short' => 'f',
-                'help' => 'Path to the text file. '
-                    . 'Defaults to app config or plugin built-in seed file.',
+                'help' => __d(
+                    'elastic/slug_guard',
+                    'Path to the text file. Defaults to app config or plugin built-in seed file.',
+                ),
             ])
             ->addOption('dry-run', [
                 'short' => 'd',
                 'boolean' => true,
-                'help' => 'Preview changes without applying them.',
+                'help' => __d('elastic/slug_guard', 'Preview changes without applying them.'),
             ]);
 
         return $parser;
@@ -71,7 +79,9 @@ class SyncCommand extends Command
             return static::CODE_ERROR;
         }
 
-        $io->success(sprintf('Sync complete. Added: %d, Removed: %d', $result['added'], $result['removed']));
+        $io->success(
+            __d('elastic/slug_guard', 'Sync complete. Added: {0}, Removed: {1}', $result['added'], $result['removed']),
+        );
 
         return static::CODE_SUCCESS;
     }
@@ -101,22 +111,22 @@ class SyncCommand extends Command
         $toRemove = $diff['toRemove'];
 
         if (empty($toAdd) && empty($toRemove)) {
-            $io->out('No changes needed.');
+            $io->out(__d('elastic/slug_guard', 'No changes needed.'));
 
             return static::CODE_SUCCESS;
         }
 
         if (!empty($toAdd)) {
-            $io->out(sprintf('Slugs to add (%d):', count($toAdd)));
+            $io->out(__d('elastic/slug_guard', 'Slugs to add ({0}):', count($toAdd)));
             foreach ($toAdd as $slug) {
-                $io->out(sprintf('  + %s', $slug));
+                $io->out(__d('elastic/slug_guard', '  + {0}', $slug));
             }
         }
 
         if (!empty($toRemove)) {
-            $io->out(sprintf('Slugs to remove (%d):', count($toRemove)));
+            $io->out(__d('elastic/slug_guard', 'Slugs to remove ({0}):', count($toRemove)));
             foreach ($toRemove as $slug) {
-                $io->out(sprintf('  - %s', $slug));
+                $io->out(__d('elastic/slug_guard', '  - {0}', $slug));
             }
         }
 

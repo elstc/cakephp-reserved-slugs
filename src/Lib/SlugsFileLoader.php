@@ -9,6 +9,8 @@ namespace Elastic\SlugGuard\Lib;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use InvalidArgumentException;
+use RuntimeException;
+use function Cake\I18n\__d;
 
 /**
  * Handles slugs file parsing and path resolution.
@@ -27,7 +29,7 @@ class SlugsFileLoader
     {
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
-            return [];
+            throw new RuntimeException(__d('elastic/slug_guard', 'Failed to read file: {0}', $filePath));
         }
 
         $slugs = [];
@@ -82,7 +84,7 @@ class SlugsFileLoader
     {
         $filePath ??= $this->resolveSeedFile();
         if (!is_file($filePath)) {
-            throw new InvalidArgumentException(sprintf('File not found: %s', $filePath));
+            throw new InvalidArgumentException(__d('elastic/slug_guard', 'File not found: {0}', $filePath));
         }
 
         return $filePath;

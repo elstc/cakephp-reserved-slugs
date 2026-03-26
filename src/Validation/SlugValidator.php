@@ -6,6 +6,9 @@ declare(strict_types=1);
 
 namespace Elastic\SlugGuard\Validation;
 
+use InvalidArgumentException;
+use function Cake\I18n\__d;
+
 /**
  * Slug format validator for URL-safe strings.
  *
@@ -62,7 +65,7 @@ class SlugValidator
         // Minimum length must be at least 2 because the regex requires
         // a start character and an end character (both alphanumeric).
         if ($minLength < 2) {
-            $minLength = 2;
+            throw new InvalidArgumentException(__d('elastic/slug_guard', 'minLength must be at least 2.'));
         }
         if ($maxLength < $minLength) {
             return false;

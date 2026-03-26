@@ -12,6 +12,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Elastic\SlugGuard\Lib\SlugsSyncService;
 use InvalidArgumentException;
+use function Cake\I18n\__d;
 
 /**
  * Import reserved slugs from a text file.
@@ -32,9 +33,11 @@ class ImportCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser
-            ->setDescription('Import reserved slugs from a text file. Existing slugs are preserved.')
+            ->setDescription(
+                __d('elastic/slug_guard', 'Import reserved slugs from a text file. Existing slugs are preserved.'),
+            )
             ->addArgument('file', [
-                'help' => 'Path to the text file containing slugs (one per line).',
+                'help' => __d('elastic/slug_guard', 'Path to the text file containing slugs (one per line).'),
                 'required' => true,
             ]);
 
@@ -61,7 +64,7 @@ class ImportCommand extends Command
             return static::CODE_ERROR;
         }
 
-        $io->success(sprintf('Imported %d new slug(s).', $added));
+        $io->success(__d('elastic/slug_guard', 'Imported {0} new slug(s).', $added));
 
         return static::CODE_SUCCESS;
     }

@@ -10,6 +10,7 @@ use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use function Cake\I18n\__d;
 
 /**
  * Remove reserved slugs.
@@ -39,8 +40,11 @@ class RemoveCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser->setDescription(
-            'Remove one or more reserved slugs. '
-            . 'Accepts slugs as arguments, or reads from stdin when piped.',
+            __d(
+                'elastic/slug_guard',
+                'Remove one or more reserved slugs. '
+                . 'Accepts slugs as arguments, or reads from stdin when piped.',
+            ),
         );
 
         return $parser;
@@ -60,7 +64,9 @@ class RemoveCommand extends Command
             $slugs = $this->readFromStdin();
         }
         if (count($slugs) === 0) {
-            $io->error('At least one slug is required. Provide arguments or pipe input via stdin.');
+            $io->error(
+                __d('elastic/slug_guard', 'At least one slug is required. Provide arguments or pipe input via stdin.'),
+            );
 
             return static::CODE_ERROR;
         }
@@ -68,14 +74,14 @@ class RemoveCommand extends Command
 
         foreach ($slugs as $slug) {
             if ($table->removeSlug($slug)) {
-                $io->success(sprintf('Removed: %s', $slug));
+                $io->success(__d('elastic/slug_guard', 'Removed: {0}', $slug));
                 $removed++;
             } else {
-                $io->warning(sprintf('Not found: %s', $slug));
+                $io->warning(__d('elastic/slug_guard', 'Not found: {0}', $slug));
             }
         }
 
-        $io->out(sprintf('Removed %d slug(s).', $removed));
+        $io->out(__d('elastic/slug_guard', 'Removed {0} slug(s).', $removed));
 
         return static::CODE_SUCCESS;
     }

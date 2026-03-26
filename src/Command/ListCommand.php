@@ -11,6 +11,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Elastic\SlugGuard\Model\Entity\ReservedSlug;
+use function Cake\I18n\__d;
 
 /**
  * List reserved slugs.
@@ -31,15 +32,15 @@ class ListCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser
-            ->setDescription('List all reserved slugs.')
+            ->setDescription(__d('elastic/slug_guard', 'List all reserved slugs.'))
             ->addOption('count', [
                 'short' => 'c',
                 'boolean' => true,
-                'help' => 'Display only the count of reserved slugs.',
+                'help' => __d('elastic/slug_guard', 'Display only the count of reserved slugs.'),
             ])
             ->addOption('search', [
                 'short' => 's',
-                'help' => 'Filter slugs by partial match.',
+                'help' => __d('elastic/slug_guard', 'Filter slugs by partial match.'),
             ]);
 
         return $parser;
@@ -71,7 +72,7 @@ class ListCommand extends Command
         $slugs = $query->orderBy(['slug' => 'ASC'])->all();
 
         if ($slugs->isEmpty()) {
-            $io->out('No reserved slugs found.');
+            $io->out(__d('elastic/slug_guard', 'No reserved slugs found.'));
 
             return static::CODE_SUCCESS;
         }
@@ -82,7 +83,7 @@ class ListCommand extends Command
         }
 
         $io->out('');
-        $io->out(sprintf('Total: %d', $slugs->count()));
+        $io->out(__d('elastic/slug_guard', 'Total: {0}', $slugs->count()));
 
         return static::CODE_SUCCESS;
     }

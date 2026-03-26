@@ -10,6 +10,7 @@ use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use function Cake\I18n\__d;
 
 /**
  * Add reserved slugs.
@@ -39,8 +40,11 @@ class AddCommand extends Command
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser->setDescription(
-            'Add one or more reserved slugs. '
-            . 'Accepts slugs as arguments, or reads from stdin when piped.',
+            __d(
+                'elastic/slug_guard',
+                'Add one or more reserved slugs. '
+                . 'Accepts slugs as arguments, or reads from stdin when piped.',
+            ),
         );
 
         return $parser;
@@ -60,7 +64,9 @@ class AddCommand extends Command
             $slugs = $this->readFromStdin();
         }
         if (count($slugs) === 0) {
-            $io->error('At least one slug is required. Provide arguments or pipe input via stdin.');
+            $io->error(
+                __d('elastic/slug_guard', 'At least one slug is required. Provide arguments or pipe input via stdin.'),
+            );
 
             return static::CODE_ERROR;
         }
@@ -68,14 +74,14 @@ class AddCommand extends Command
 
         foreach ($slugs as $slug) {
             if ($table->addSlug($slug)) {
-                $io->success(sprintf('Added: %s', $slug));
+                $io->success(__d('elastic/slug_guard', 'Added: {0}', $slug));
                 $added++;
             } else {
-                $io->warning(sprintf('Already exists: %s', $slug));
+                $io->warning(__d('elastic/slug_guard', 'Already exists: {0}', $slug));
             }
         }
 
-        $io->out(sprintf('Added %d slug(s).', $added));
+        $io->out(__d('elastic/slug_guard', 'Added {0} slug(s).', $added));
 
         return static::CODE_SUCCESS;
     }
