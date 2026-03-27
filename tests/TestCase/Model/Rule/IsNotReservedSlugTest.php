@@ -7,9 +7,12 @@ declare(strict_types=1);
 namespace Elastic\SlugGuard\Test\TestCase\Model\Rule;
 
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
 use Elastic\SlugGuard\Model\Rule\IsNotReservedSlug;
+use Elastic\SlugGuard\Model\Table\SlugExistenceInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
 
 class IsNotReservedSlugTest extends TestCase
 {
@@ -74,5 +77,73 @@ class IsNotReservedSlugTest extends TestCase
 
         // Assert
         $this->assertSame($expected, $result);
+    }
+
+    public function testCustomTableReservedSlugIsRejected(): void
+    {
+        // Arrange
+        // -----------------------------------------------
+        // Create a custom table implementing SlugExistenceInterface
+        $customTable = new class extends Table implements SlugExistenceInterface {
+            public function slugExists(string $slug): bool
+            {
+                return $slug === 'taken';
+            }
+        };
+        $this->getTableLocator()->set('CustomReservedSlugs', $customTable);
+
+        $rule = new IsNotReservedSlug('slug', 'CustomReservedSlugs');
+        $entity = new Entity(['slug' => 'taken']);
+
+        // Act
+        // -----------------------------------------------
+        $result = $rule($entity, []);
+
+        // Assert
+        // -----------------------------------------------
+        $this->assertFalse($result);
+    }
+
+    public function testCustomTableNonReservedSlugIsAllowed(): void
+    {
+        // Arrange
+        // -----------------------------------------------
+        // Create a custom table implementing SlugExistenceInterface
+        $customTable = new class extends Table implements SlugExistenceInterface {
+            public function slugExists(string $slug): bool
+            {
+                return $slug === 'taken';
+            }
+        };
+        $this->getTableLocator()->set('CustomReservedSlugs', $customTable);
+
+        $rule = new IsNotReservedSlug('slug', 'CustomReservedSlugs');
+        $entity = new Entity(['slug' => 'available']);
+
+        // Act
+        // -----------------------------------------------
+        $result = $rule($entity, []);
+
+        // Assert
+        // -----------------------------------------------
+        $this->assertTrue($result);
+    }
+
+    public function testTableWithoutInterfaceThrowsException(): void
+    {
+        // Arrange
+        // -----------------------------------------------
+        // Use a plain Table that does NOT implement SlugExistenceInterface
+        $rule = new IsNotReservedSlug('slug', 'NonCompliantTable');
+        $entity = new Entity(['slug' => 'test']);
+
+        // Assert
+        // -----------------------------------------------
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('must implement');
+
+        // Act
+        // -----------------------------------------------
+        $rule($entity, []);
     }
 }

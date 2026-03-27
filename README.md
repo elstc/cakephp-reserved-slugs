@@ -92,6 +92,35 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 ]);
 ```
 
+#### Custom reserved slugs table
+
+You can use any table as the reserved slugs backend by implementing `SlugExistenceInterface`:
+
+```php
+// src/Model/Table/CustomReservedSlugsTable.php
+namespace App\Model\Table;
+
+use Cake\ORM\Table;
+use Elastic\SlugGuard\Model\Table\SlugExistenceInterface;
+
+class CustomReservedSlugsTable extends Table implements SlugExistenceInterface
+{
+    public function slugExists(string $slug): bool
+    {
+        return $this->exists(['slug' => $slug]);
+    }
+}
+```
+
+Then pass the table name to `IsNotReservedSlug`:
+
+```php
+$rules->add(new IsNotReservedSlug('slug', 'CustomReservedSlugs'), 'reservedSlug', [
+    'errorField' => 'slug',
+    'message' => 'This slug is reserved.',
+]);
+```
+
 ### Route Conflict Rule
 
 Add the `IsNotRouteConflict` rule to prevent slugs from colliding with application routes (e.g. `/admin`, `/api`, `/posts`):
