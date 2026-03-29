@@ -11,8 +11,8 @@ use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
 use Elastic\SlugGuard\Model\Rule\IsNotReservedSlug;
 use Elastic\SlugGuard\Model\Table\SlugExistenceInterface;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use RuntimeException;
 
 class IsNotReservedSlugTest extends TestCase
 {
@@ -83,15 +83,7 @@ class IsNotReservedSlugTest extends TestCase
     {
         // Arrange
         // -----------------------------------------------
-        // Create a custom table implementing SlugExistenceInterface
-        $customTable = new class extends Table implements SlugExistenceInterface {
-            public function slugExists(string $slug): bool
-            {
-                return $slug === 'taken';
-            }
-        };
-        $this->getTableLocator()->set('CustomReservedSlugs', $customTable);
-
+        $this->registerCustomSlugTable();
         $rule = new IsNotReservedSlug('slug', 'CustomReservedSlugs');
         $entity = new Entity(['slug' => 'taken']);
 
@@ -108,15 +100,7 @@ class IsNotReservedSlugTest extends TestCase
     {
         // Arrange
         // -----------------------------------------------
-        // Create a custom table implementing SlugExistenceInterface
-        $customTable = new class extends Table implements SlugExistenceInterface {
-            public function slugExists(string $slug): bool
-            {
-                return $slug === 'taken';
-            }
-        };
-        $this->getTableLocator()->set('CustomReservedSlugs', $customTable);
-
+        $this->registerCustomSlugTable();
         $rule = new IsNotReservedSlug('slug', 'CustomReservedSlugs');
         $entity = new Entity(['slug' => 'available']);
 
@@ -129,6 +113,21 @@ class IsNotReservedSlugTest extends TestCase
         $this->assertTrue($result);
     }
 
+    /**
+     * Registers a custom table implementing SlugExistenceInterface under the
+     * 'CustomReservedSlugs' alias. The table treats only 'taken' as reserved.
+     */
+    private function registerCustomSlugTable(): void
+    {
+        $customTable = new class extends Table implements SlugExistenceInterface {
+            public function slugExists(string $slug): bool
+            {
+                return $slug === 'taken';
+            }
+        };
+        $this->getTableLocator()->set('CustomReservedSlugs', $customTable);
+    }
+
     public function testTableWithoutInterfaceThrowsException(): void
     {
         // Arrange
@@ -139,7 +138,7 @@ class IsNotReservedSlugTest extends TestCase
 
         // Assert
         // -----------------------------------------------
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('must implement');
 
         // Act

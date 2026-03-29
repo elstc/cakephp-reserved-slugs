@@ -9,7 +9,7 @@ namespace Elastic\SlugGuard\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Elastic\SlugGuard\Model\Table\SlugExistenceInterface;
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * Application rule that prevents slugs from conflicting with system URLs.
@@ -76,7 +76,7 @@ class IsNotReservedSlug
 
         $table = $this->fetchTable($this->tableName);
         if (!$table instanceof SlugExistenceInterface) {
-            throw new RuntimeException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Table "%s" must implement %s.',
                     $this->tableName,
