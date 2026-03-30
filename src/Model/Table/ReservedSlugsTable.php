@@ -21,7 +21,7 @@ use Elastic\SlugGuard\Model\Entity\ReservedSlug;
  * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
  * @method \Elastic\SlugGuard\Model\Entity\ReservedSlug saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
  */
-class ReservedSlugsTable extends Table
+class ReservedSlugsTable extends Table implements SlugExistenceInterface
 {
     /**
      * @inheritDoc

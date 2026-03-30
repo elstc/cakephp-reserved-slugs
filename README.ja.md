@@ -92,6 +92,35 @@ $rules->add(new IsNotReservedSlug('username'), 'reservedSlug', [
 ]);
 ```
 
+#### カスタム予約スラッグテーブル
+
+`SlugExistenceInterface` を実装することで、任意のテーブルを予約スラッグのバックエンドとして使用できます：
+
+```php
+// src/Model/Table/CustomReservedSlugsTable.php
+namespace App\Model\Table;
+
+use Cake\ORM\Table;
+use Elastic\SlugGuard\Model\Table\SlugExistenceInterface;
+
+class CustomReservedSlugsTable extends Table implements SlugExistenceInterface
+{
+    public function slugExists(string $slug): bool
+    {
+        return $this->exists(['slug' => $slug]);
+    }
+}
+```
+
+`IsNotReservedSlug` にテーブル名を渡します：
+
+```php
+$rules->add(new IsNotReservedSlug('slug', 'CustomReservedSlugs'), 'reservedSlug', [
+    'errorField' => 'slug',
+    'message' => 'このスラッグは予約されています。',
+]);
+```
+
 ### ルート衝突ルール
 
 `IsNotRouteConflict` ルールを追加すると、スラッグがアプリケーションルート（例: `/admin`, `/api`, `/posts`）と衝突するのを防止できます：
